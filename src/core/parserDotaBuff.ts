@@ -5,6 +5,8 @@ import { IMostPopular } from "../types/IMostPopular";
 import { IPlayerStats } from "../types/IPlayerStats";
 import { IParserDotaBuffResult } from "../types/IParserDotaBuffResult";
 import { sleep } from "../utils/sleep";
+import { fetchData } from "./fetchData";
+import { collectAllGames } from "./collectAllGames";
 
 const matchesEndpoint: string =
   "https://www.dotabuff.com/players/REQUIRED_ID/matches?enhance=overview&page=PAGE_NUMBER";
@@ -22,20 +24,29 @@ export async function parserDotaBuff(
 
   const allGames: IAllGames[] = [];
 
-  for (let i: number = 1; i <= pageCount; i++) {
-    const { html, success } = await fetch(
-      matchesEndpoint
-        .replace("REQUIRED_ID", id.toString())
-        .replace("PAGE_NUMBER", i.toString()),
-      {
-        method: "GET",
-      },
-    ).then(async (response) => {
-      return {
-        html: await response.text(),
-        success: response.status === 200,
-      };
-    });
+  const { html, success } = await fetchData(matchesEndpoint, id, 1);
+
+  if (!html || !success) throw new Error("Failed to get HTML source");
+
+  const { document } = new JSDOM(html).window;
+
+  const playerName: string =
+    document
+      .querySelector("div.header-content-title h1")
+      ?.textContent?.trim()
+      ?.replace("Matches", "") || "";
+
+  const avatarUrl: string =
+    document.querySelector("div.header-content a img")?.getAttribute("src") ||
+    "";
+
+  const allGamesInPage: IAllGames[] = collectAllGames(document);
+
+  allGames.push(...allGamesInPage);
+  await sleep(2000);
+
+  for (let i: number = 2; i <= pageCount; i++) {
+    const { html, success } = await fetchData(matchesEndpoint, id, i);
 
     if (!html || !success) throw new Error("Failed to get HTML source");
 
@@ -52,28 +63,7 @@ export async function parserDotaBuff(
       break;
     }
 
-    const allGamesInPage: IAllGames[] = Array.from(
-      document.querySelectorAll("table tbody tr"),
-    ).map((gameRow) => {
-      return {
-        hero:
-          gameRow.querySelector("td.cell-large a")?.textContent?.trim() || "",
-        result:
-          gameRow
-            .querySelector("td.cell-centered.r-none-mobile + td a")
-            ?.textContent?.trim() || "",
-        items: Array.from(
-          gameRow.querySelectorAll("td.r-none-tablet.cell-xxlarge div a"),
-        ).map((link) => {
-          return (
-            link
-              ?.getAttribute("href")
-              ?.split("items/")?.[1]
-              ?.replaceAll("-", " ") || ""
-          );
-        }),
-      };
-    });
+    const allGamesInPage: IAllGames[] = collectAllGames(document);
 
     allGames.push(...allGamesInPage);
     await sleep(2000);
@@ -118,6 +108,7 @@ export async function parserDotaBuff(
     );
 
     mostPopularHeroes.push({
+      // todo: avatar
       hero: mostPopularHeroesWithoutStats[i],
       totalGames: `${coincidencesHero.length}/${allGames.length}`,
       winRate: `${winRateForHero.length}/${coincidencesHero.length}`,
@@ -127,6 +118,7 @@ export async function parserDotaBuff(
     });
 
     mostPopularItems.push({
+      // todo: avatar
       item: mostPopularItemsWithoutStats[i],
       totalGames: `${coincidencesItem.length}/${allGames.length}`,
       winRate: `${winRateForItem.length}/${coincidencesItem.length}`,
@@ -146,14 +138,9 @@ export async function parserDotaBuff(
     mostPopularItems,
   };
 
-  // const playerName: string =
-  //   document
-  //     .querySelector("div.header-content-title h1")
-  //     ?.textContent?.trim()
-  //     ?.replace("Матчи", "") || "";
-
   return {
-    // playerName,
+    playerName,
+    avatarUrl,
     playerStats,
     allGames,
   };

@@ -44,11 +44,11 @@ async function main(): Promise<void> {
         });
 
       let modifiedValidHtml = validHtml
-        // todo: image link replace in template
-        .replace("$NICKNAME", "GRYAZ") // todo: change
+        .replace("$NICKNAME", data.playerName)
+        .replace("$AVATAR_URL", data.avatarUrl)
         .replace("$PLAYER_TOTALGAMES", data.playerStats.totalGames.toString())
         .replace("$PLAYER_WIN", data.playerStats.win.toString())
-        .replace("$PLAYES_LOSE", data.playerStats.lose.toString())
+        .replace("$PLAYER_LOSE", data.playerStats.lose.toString())
         .replace("$PLAYER_WINRATE", data.playerStats.overallWinRate.toString())
         .replace("$ITEMS", "$ITEMS ".repeat(TOTAL_TOP))
         .replace("$HEROES", "$HEROES ".repeat(TOTAL_TOP));
@@ -67,6 +67,7 @@ async function main(): Promise<void> {
 
       reply.code(200).type("text/html; charset=utf-8").send(modifiedValidHtml);
     } else {
+      console.log(11111111);
       // todo: send 404 template
       // const emptyHtml = await readFile(path.join(__dirname, "404.html"));
       // const x = validHtml.replace("NICKNAME", "GRYAZ");
