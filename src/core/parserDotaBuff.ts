@@ -9,14 +9,14 @@ import { sleep } from "../utils/sleep";
 const matchesEndpoint: string =
   "https://www.dotabuff.com/players/REQUIRED_ID/matches?enhance=overview&page=PAGE_NUMBER";
 
+export const TOTAL_TOP: number = 5;
+
 export async function parserDotaBuff(
   id: number,
   gamesCount: number,
 ): Promise<IParserDotaBuffResult> {
   if (gamesCount <= 0) throw new Error("The value cannot be less than zero");
   if (!id) throw new Error("Required parameter");
-
-  const TOTAL_TOP: number = 5;
 
   const pageCount: number = Math.ceil(gamesCount / 50);
 

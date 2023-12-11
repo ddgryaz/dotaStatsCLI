@@ -1,7 +1,7 @@
 import fastify from "fastify";
 import ora from "ora";
 import open from "open";
-import { parserDotaBuff } from "./core/parserDotaBuff";
+import { parserDotaBuff, TOTAL_TOP } from "./core/parserDotaBuff";
 import * as process from "process";
 import { readFile } from "fs/promises";
 import * as path from "path";
@@ -16,51 +16,61 @@ async function main(): Promise<void> {
   const data = await parserDotaBuff(Number(id), Number(totalGames));
   progressBar.stop();
 
-  // const data = null;
-
   http.get(`/${id}`, async (request, reply) => {
-    const validHtml = await readFile(
-      path.join(__dirname, "..", "src", "templates", "index.html"),
-      { encoding: "utf-8" },
-    );
+    if (data) {
+      const validHtml = await readFile(
+        path.join(__dirname, "..", "src", "templates", "index.html"),
+        { encoding: "utf-8" },
+      );
 
-    const modifiedValidHtml = validHtml
-      .replace("$NICKNAME", "GRYAZ")
-      .replace("$PLAYER_TOTALGAMES", data.playerStats.totalGames.toString())
-      .replace("$PLAYER_WIN", data.playerStats.win.toString())
-      .replace("$PLAYES_LOSE", data.playerStats.lose.toString())
-      .replace("$PLAYER_WINRATE", data.playerStats.overallWinRate.toString())
-      .replace(
-        "$HEROES",
-        // @ts-ignore
-        data.playerStats.mostPopularHeroes.map((hero): string => {
+      const arrayHeroesForTable: string[] =
+        data.playerStats.mostPopularHeroes.map((hero) => {
           return `<tr>
               <th>${hero.hero}</th>
               <th>${hero.totalGames}</th>
               <th>${hero.winRate}</th>
               <th>${hero["winRate%"]}</th>
             </tr>`;
-        }),
-      )
-      .replace(
-        "$ITEMS",
-        // @ts-ignore
-        data.playerStats.mostPopularItems.map((item): string => {
+        });
+
+      const arrayItemsForTable: string[] =
+        data.playerStats.mostPopularItems.map((item) => {
           return `<tr>
               <th>${item.item}</th>
               <th>${item.totalGames}</th>
               <th>${item.winRate}</th>
               <th>${item["winRate%"]}</th>
             </tr>`;
-        }),
-      );
+        });
 
-    if (data) {
+      let modifiedValidHtml = validHtml
+        // todo: image link replace in template
+        .replace("$NICKNAME", "GRYAZ") // todo: change
+        .replace("$PLAYER_TOTALGAMES", data.playerStats.totalGames.toString())
+        .replace("$PLAYER_WIN", data.playerStats.win.toString())
+        .replace("$PLAYES_LOSE", data.playerStats.lose.toString())
+        .replace("$PLAYER_WINRATE", data.playerStats.overallWinRate.toString())
+        .replace("$ITEMS", "$ITEMS ".repeat(TOTAL_TOP))
+        .replace("$HEROES", "$HEROES ".repeat(TOTAL_TOP));
+
+      for (let i = 0; i < TOTAL_TOP; i++) {
+        modifiedValidHtml = modifiedValidHtml.replace(
+          "$ITEMS",
+          arrayItemsForTable[i],
+        );
+
+        modifiedValidHtml = modifiedValidHtml.replace(
+          "$HEROES",
+          arrayHeroesForTable[i],
+        );
+      }
+
       reply.code(200).type("text/html; charset=utf-8").send(modifiedValidHtml);
     } else {
+      // todo: send 404 template
       // const emptyHtml = await readFile(path.join(__dirname, "404.html"));
       // const x = validHtml.replace("NICKNAME", "GRYAZ");
-      reply.code(404).type("text/html; charset=utf-8").send(validHtml);
+      // reply.code(404).type("text/html; charset=utf-8").send(validHtml);
     }
 
     process.exit(0);
