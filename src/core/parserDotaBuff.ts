@@ -12,7 +12,7 @@ const matchesEndpoint: string =
 export async function parserDotaBuff(
   id: number,
   gamesCount: number,
-): Promise<IParserDotaBuffResult[]> {
+): Promise<IParserDotaBuffResult> {
   if (gamesCount <= 0) throw new Error("The value cannot be less than zero");
   if (!id) throw new Error("Required parameter");
 
@@ -23,7 +23,7 @@ export async function parserDotaBuff(
   const allGames: IAllGames[] = [];
 
   for (let i: number = 1; i <= pageCount; i++) {
-    const { html, status } = await fetch(
+    const { html, success } = await fetch(
       matchesEndpoint
         .replace("REQUIRED_ID", id.toString())
         .replace("PAGE_NUMBER", i.toString()),
@@ -33,15 +33,11 @@ export async function parserDotaBuff(
     ).then(async (response) => {
       return {
         html: await response.text(),
-        status: response.status,
+        success: response.status === 200,
       };
     });
 
-    console.log(status)
-
-    // TODO: обработать status, иногда приходит 429 (html = "Retry later")
-
-    if (!html) throw new Error("Failed to get HTML source");
+    if (!html || !success) throw new Error("Failed to get HTML source");
 
     const { document } = new JSDOM(html).window;
 
@@ -80,7 +76,7 @@ export async function parserDotaBuff(
     });
 
     allGames.push(...allGamesInPage);
-    await sleep(500);
+    await sleep(2000);
   }
 
   const winMatches: IAllGames[] = allGames.filter(
@@ -156,11 +152,9 @@ export async function parserDotaBuff(
   //     ?.textContent?.trim()
   //     ?.replace("Матчи", "") || "";
 
-  return [
-    {
-      // playerName,
-      playerStats,
-      allGames,
-    },
-  ];
+  return {
+    // playerName,
+    playerStats,
+    allGames,
+  };
 }
