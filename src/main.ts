@@ -24,8 +24,19 @@ async function main(): Promise<void> {
       );
 
       const arrayHeroesForTable: string[] =
-        data.playerStats.mostPopularHeroes.map((hero) => {
-          return `<tr>
+        data.playerStats.mostPopularHeroes.map((hero, index) => {
+          return `
+            <tr>
+              <th>${index + 1}.</th>
+              <th>
+              <img
+                src="${hero.avatar}"
+                alt=""
+                height="30px"
+                width="49px"
+                class="rectangle"
+              />
+              </th>
               <th>${hero.hero}</th>
               <th>${hero.totalGames}</th>
               <th>${hero.winRate}</th>
@@ -34,8 +45,19 @@ async function main(): Promise<void> {
         });
 
       const arrayItemsForTable: string[] =
-        data.playerStats.mostPopularItems.map((item) => {
-          return `<tr>
+        data.playerStats.mostPopularItems.map((item, index) => {
+          return `
+            <tr>
+            <th>${index + 1}.</th>
+            <th>
+              <img
+                src="${item.avatar}"
+                alt=""
+                height="30px"
+                width="49px"
+                class="rectangle"
+              />
+              </th>
               <th>${item.item}</th>
               <th>${item.totalGames}</th>
               <th>${item.winRate}</th>
