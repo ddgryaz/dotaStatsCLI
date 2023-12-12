@@ -1,9 +1,11 @@
-export function sortByPopularity(array: string[]): string[] {
+import { IAllArray } from "../types/IAllArray";
+
+export function sortByPopularity(array: IAllArray[]): IAllArray[] {
   return array
     .sort(
-      (a: string, b: string) =>
-        array.filter((v: string): boolean => v === a).length -
-        array.filter((v: string): boolean => v === b).length,
+      (a: IAllArray, b: IAllArray) =>
+        array.filter((v: IAllArray): boolean => v.name === a.name).length -
+        array.filter((v: IAllArray): boolean => v.name === b.name).length,
     )
     .reverse();
 }

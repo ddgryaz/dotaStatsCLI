@@ -1,4 +1,5 @@
 import { IAllGames } from "../types/IAllGames";
+import { IAllArray } from "../types/IAllArray";
 
 export function collectAllGames(document: Document): IAllGames[] {
   return Array.from(document.querySelectorAll("table tbody tr")).map(
@@ -18,13 +19,17 @@ export function collectAllGames(document: Document): IAllGames[] {
             ?.textContent?.trim() || "",
         items: Array.from(
           gameRow.querySelectorAll("td.r-none-tablet.cell-xxlarge div a"),
-        ).map((link) => {
-          return (
-            link
-              ?.getAttribute("href")
-              ?.split("items/")?.[1]
-              ?.replaceAll("-", " ") || ""
-          );
+        ).map((link): IAllArray => {
+          return {
+            name:
+              link
+                ?.getAttribute("href")
+                ?.split("items/")?.[1]
+                ?.replaceAll("-", " ") || "",
+            avatar: "https://www.dotabuff.com".concat(
+              link.querySelector("img")?.getAttribute("src") || "",
+            ),
+          };
         }),
       };
     },
