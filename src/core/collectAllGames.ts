@@ -25,7 +25,11 @@ export function collectAllGames(document: Document): IAllGames[] {
               link
                 ?.getAttribute("href")
                 ?.split("items/")?.[1]
-                ?.replaceAll("-", " ") || "",
+                ?.replaceAll("-", " ")
+                ?.trim()
+                ?.split(/\s+/)
+                ?.map((word) => word[0].toUpperCase() + word.substring(1))
+                ?.join(" ") || "",
             avatar: "https://www.dotabuff.com".concat(
               link.querySelector("img")?.getAttribute("src") || "",
             ),
