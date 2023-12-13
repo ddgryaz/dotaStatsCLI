@@ -1,16 +1,18 @@
 import fastify from "fastify";
 import ora from "ora";
 import open from "open";
-import { parserDotaBuff, TOTAL_TOP } from "./core/parserDotaBuff";
+import { parserDotaBuff } from "./core/parserDotaBuff";
 import * as process from "process";
 import { readFile } from "fs/promises";
 import * as path from "path";
+import { getTopCount } from "./core/getTopCount";
 
 const http = fastify();
 const progressBar = ora();
 const [id, totalGames]: string[] = [process.argv[2], process.argv[3]];
 const HOST: string = "127.0.0.1";
 const PORT: number = 6781;
+const TOTAL_TOP: number = getTopCount(Number(totalGames));
 async function main(): Promise<void> {
   progressBar.start("Get data...");
   const data = await parserDotaBuff(Number(id), Number(totalGames));

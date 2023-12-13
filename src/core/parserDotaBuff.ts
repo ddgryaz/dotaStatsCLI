@@ -8,11 +8,10 @@ import { sleep } from "../utils/sleep";
 import { fetchData } from "./fetchData";
 import { collectAllGames } from "./collectAllGames";
 import { IAllArray } from "../types/IAllArray";
+import { getTopCount } from "./getTopCount";
 
 const matchesEndpoint: string =
   "https://www.dotabuff.com/players/REQUIRED_ID/matches?enhance=overview&page=PAGE_NUMBER";
-
-export const TOTAL_TOP: number = 5; // todo: если игр 200 и больше, то отдавать здесь 10, иначе 5
 
 export async function parserDotaBuff(
   id: number,
@@ -22,6 +21,7 @@ export async function parserDotaBuff(
   if (!id) throw new Error("Required parameter");
 
   const pageCount: number = Math.ceil(gamesCount / 50);
+  const TOTAL_TOP = getTopCount(gamesCount);
 
   const allGames: IAllGames[] = [];
 
