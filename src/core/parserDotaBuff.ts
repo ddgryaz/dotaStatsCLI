@@ -9,8 +9,8 @@ import { fetchData } from "./fetchData";
 import { collectAllGames } from "./collectAllGames";
 import { IAllArray } from "../types/IAllArray";
 import { getTopCount } from "./getTopCount";
-import { LargeNumberOfRequestsError } from "../errors/largeNumberOfRequestsError";
 import { BaseError } from "../errors/baseError";
+import { BanError } from "../errors/banError";
 
 const matchesEndpoint: string =
   "https://www.dotabuff.com/players/REQUIRED_ID/matches?enhance=overview&page=PAGE_NUMBER";
@@ -23,20 +23,19 @@ export async function parserDotaBuff(
   if (!id) throw new Error("Required parameter");
 
   const pageCount: number = Math.ceil(gamesCount / 50);
-  const TOTAL_TOP = getTopCount(gamesCount);
+  const TOTAL_TOP = getTopCount(gamesCount); // todo: адаптировать под неполный результат, в случае если заранее вышли из цикла запросов
 
   const allGames: IAllGames[] = [];
 
   const { html, status, success } = await fetchData(matchesEndpoint, id, 1);
 
-  // todo: здесь выкидываем ошибку, без данных, дальше выкидываем 404.html
   if (!success && status === 429) {
-    throw new LargeNumberOfRequestsError(
-      `An error occurred while retrieving data. Status code: ${status}. Changing the IP address will probably help.`,
+    throw new BanError(
+      `Error: Too many requests. Status code: ${status}. Changing the IP address will probably help.`,
     );
   } else if (!success) {
     throw new BaseError(
-      `An error occurred while retrieving data. Status code: ${status}.`,
+      `Error: An error occurred while retrieving data. Status code: ${status}.`,
     );
   }
 
@@ -202,6 +201,8 @@ export async function parserDotaBuff(
     mostPopularHeroes,
     mostPopularItems,
   };
+
+  // todo: проверить полный ли сбор, если нет выкинуть LargeNumberOfRequestsError с уже собранными данными
 
   return {
     playerName,

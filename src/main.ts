@@ -6,6 +6,8 @@ import * as process from "process";
 import { readFile } from "fs/promises";
 import * as path from "path";
 import { getTopCount } from "./core/getTopCount";
+import { IParserDotaBuffResult } from "./types/IParserDotaBuffResult";
+import { LargeNumberOfRequestsError } from "./errors/largeNumberOfRequestsError";
 
 const http = fastify();
 const progressBar = ora();
@@ -14,12 +16,29 @@ const HOST: string = "127.0.0.1";
 const PORT: number = 6781;
 const TOTAL_TOP: number = getTopCount(Number(totalGames));
 async function main(): Promise<void> {
+  let data: IParserDotaBuffResult | null;
+  let error: string | null;
+
   progressBar.start("Get data...");
-  const data = await parserDotaBuff(Number(id), Number(totalGames));
+
+  try {
+    data = await parserDotaBuff(Number(id), Number(totalGames));
+    error = null;
+  } catch (e) {
+    if (e instanceof LargeNumberOfRequestsError) {
+      data = e.data;
+      error = e.message;
+    } else {
+      data = null;
+      error = e.message;
+    }
+  }
+
   progressBar.stop();
 
   http.get(`/${id}`, async (request, reply) => {
     if (data) {
+      // todo: если ошибка есть, вставить ее где-то
       const validHtml = await readFile(
         path.join(__dirname, "..", "src", "templates", "index.html"),
         { encoding: "utf-8" },
@@ -91,11 +110,12 @@ async function main(): Promise<void> {
 
       reply.code(200).type("text/html; charset=utf-8").send(modifiedValidHtml);
     } else {
-      console.log(11111111);
-      // todo: send 404 template
-      // const emptyHtml = await readFile(path.join(__dirname, "404.html"));
-      // const x = validHtml.replace("NICKNAME", "GRYAZ");
-      // reply.code(404).type("text/html; charset=utf-8").send(validHtml);
+      const validHtml = await readFile(
+        path.join(__dirname, "..", "src", "templates", "404.html"),
+        { encoding: "utf-8" },
+      );
+
+      reply.code(200).type("text/html; charset=utf-8").send(validHtml);
     }
 
     process.exit(0);
@@ -108,5 +128,7 @@ async function main(): Promise<void> {
 const start = performance.now();
 main().then(() => {
   const end = performance.now();
-  console.log(`Program running time: ${(end - start) / 1000}`);
+  console.log(
+    `Program running time: ${((end - start) / 1000).toFixed(2)} seconds`,
+  );
 });
