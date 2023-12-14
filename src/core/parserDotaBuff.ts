@@ -9,6 +9,8 @@ import { fetchData } from "./fetchData";
 import { collectAllGames } from "./collectAllGames";
 import { IAllArray } from "../types/IAllArray";
 import { getTopCount } from "./getTopCount";
+import { LargeNumberOfRequestsError } from "../errors/largeNumberOfRequestsError";
+import { BaseError } from "../errors/baseError";
 
 const matchesEndpoint: string =
   "https://www.dotabuff.com/players/REQUIRED_ID/matches?enhance=overview&page=PAGE_NUMBER";
@@ -25,11 +27,22 @@ export async function parserDotaBuff(
 
   const allGames: IAllGames[] = [];
 
-  const { html, success } = await fetchData(matchesEndpoint, id, 1);
+  const { html, status, success } = await fetchData(matchesEndpoint, id, 1);
 
-  if (!html || !success) throw new Error("Failed to get HTML source");
+  // todo: здесь выкидываем ошибку, без данных, дальше выкидываем 404.html
+  if (!success && status === 429) {
+    throw new LargeNumberOfRequestsError(
+      `An error occurred while retrieving data. Status code: ${status}. Changing the IP address will probably help.`,
+    );
+  } else if (!success) {
+    throw new BaseError(
+      `An error occurred while retrieving data. Status code: ${status}.`,
+    );
+  }
 
   const { document } = new JSDOM(html).window;
+
+  // todo: добавить проверку на наличие данные, или на приватный профиль, или на существование профиля. В случае нахождения - выкидываем 404 с соответствующим текстом.
 
   const playerName: string =
     document
@@ -44,14 +57,15 @@ export async function parserDotaBuff(
   const allGamesInPage: IAllGames[] = collectAllGames(document);
 
   allGames.push(...allGamesInPage);
-  await sleep(2000);
+  await sleep(2_000);
 
   for (let i: number = 2; i <= pageCount; i++) {
-    const { html, success } = await fetchData(matchesEndpoint, id, i);
+    const { html, success, status } = await fetchData(matchesEndpoint, id, i);
 
     if (!html || !success) throw new Error("Failed to get HTML source");
 
     // todo: if !success => break
+    // todo: Здесь выкидываем ошибку, с уже существующими данными, ошибку транслируем вместе с данными в index.html
 
     const { document } = new JSDOM(html).window;
 
@@ -69,12 +83,17 @@ export async function parserDotaBuff(
     const allGamesInPage: IAllGames[] = collectAllGames(document);
 
     allGames.push(...allGamesInPage);
-    await sleep(2000);
+    await sleep(2_000);
   }
+
+  console.log(`Data done! - ${allGames.length}`);
 
   const winMatches: IAllGames[] = allGames.filter(
     (game) => game.result === "Won Match",
   );
+
+  console.log("winMatches");
+
   const allItems: IAllArray[] = allGames
     .map((game) => {
       return game.items.map((item) => {
@@ -86,6 +105,8 @@ export async function parserDotaBuff(
     })
     .flat();
 
+  console.log("allItems");
+
   const allHeroes: IAllArray[] = allGames
     .map((game) => {
       return {
@@ -94,6 +115,8 @@ export async function parserDotaBuff(
       };
     })
     .flat();
+
+  console.log("allHeroes");
 
   const mostPopularHeroesWithoutStats: IAllArray[] = sortByPopularity(allHeroes)
     .reduce((acc: IAllArray[], curr) => {
@@ -104,6 +127,9 @@ export async function parserDotaBuff(
     }, [])
     .slice(0, TOTAL_TOP);
 
+  console.log("mostPopularHeroesWithoutStats");
+
+  // todo: здесь очень долго
   const mostPopularItemsWithoutStats: IAllArray[] = sortByPopularity(allItems)
     .reduce((acc: IAllArray[], curr) => {
       if (!acc.find((v) => v.name === curr.name)) {
@@ -112,6 +138,8 @@ export async function parserDotaBuff(
       return acc;
     }, [])
     .slice(0, TOTAL_TOP);
+
+  console.log("mostPopularItemsWithoutStats");
 
   const mostPopularItems: IMostPopular[] = [];
   const mostPopularHeroes: IMostPopular[] = [];
@@ -163,6 +191,8 @@ export async function parserDotaBuff(
     });
   }
 
+  console.log("LOOP FOR DONE");
+
   const playerStats: IPlayerStats = {
     totalGames: allGames.length,
     win: winMatches.length,
@@ -177,6 +207,7 @@ export async function parserDotaBuff(
     playerName,
     avatarUrl,
     playerStats,
-    allGames,
+    // todo: не используется в визуализации? #1
+    // allGames,
   };
 }

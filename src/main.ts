@@ -105,4 +105,8 @@ async function main(): Promise<void> {
   await open(`http://localhost:${PORT}/${id}`);
 }
 
-main();
+const start = performance.now();
+main().then(() => {
+  const end = performance.now();
+  console.log(`Program running time: ${(end - start) / 1000}`);
+});
