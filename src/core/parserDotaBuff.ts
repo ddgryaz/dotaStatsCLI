@@ -31,7 +31,7 @@ export async function parserDotaBuff(
 
   if (!success && status === 429) {
     throw new BanError(
-      `Error: Too many requests. Status code: ${status}. Changing the IP address will probably help.`,
+      `Error: Too many requests. You have probably been blocked from www.dotabuff.com. Status code: ${status}. Changing the IP address will probably help.`,
     );
   } else if (!success) {
     throw new BaseError(
