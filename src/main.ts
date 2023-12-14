@@ -129,6 +129,7 @@ async function main(): Promise<void> {
 
       reply.code(200).type("text/html; charset=utf-8").send(modifiedValidHtml);
     } else {
+      // todo: реализовать шаблон ошибки и отдавать его в случае ее присутствия
       const validHtml = await readFile(
         path.join(__dirname, "..", "src", "templates", "404.html"),
         { encoding: "utf-8" },
