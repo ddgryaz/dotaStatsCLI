@@ -11,6 +11,7 @@ import { IAllArray } from "../types/IAllArray";
 import { getTopCount } from "./getTopCount";
 import { BaseError } from "../errors/baseError";
 import { BanError } from "../errors/banError";
+import { SaveDataError } from "../errors/saveDataError";
 
 const matchesEndpoint: string =
   "https://www.dotabuff.com/players/REQUIRED_ID/matches?enhance=overview&page=PAGE_NUMBER";
@@ -24,6 +25,15 @@ export async function parserDotaBuff(
 
   const pageCount: number = Math.ceil(gamesCount / 50);
   const TOTAL_TOP = getTopCount(gamesCount); // todo: адаптировать под неполный результат, в случае если заранее вышли из цикла запросов
+  let aborted: {
+    aborted: boolean;
+    pageNumber: number | null;
+    status: number | null;
+  } = {
+    aborted: false,
+    pageNumber: null,
+    status: null,
+  };
 
   const allGames: IAllGames[] = [];
 
@@ -61,10 +71,10 @@ export async function parserDotaBuff(
   for (let i: number = 2; i <= pageCount; i++) {
     const { html, success, status } = await fetchData(matchesEndpoint, id, i);
 
-    if (!html || !success) throw new Error("Failed to get HTML source");
-
-    // todo: if !success => break
-    // todo: Здесь выкидываем ошибку, с уже существующими данными, ошибку транслируем вместе с данными в index.html
+    if (!success) {
+      aborted = { aborted: true, pageNumber: i, status };
+      break;
+    }
 
     const { document } = new JSDOM(html).window;
 
@@ -85,13 +95,13 @@ export async function parserDotaBuff(
     await sleep(2_000);
   }
 
-  console.log(`Data done! - ${allGames.length}`);
+  // console.log(`Data done! - ${allGames.length}`);
 
   const winMatches: IAllGames[] = allGames.filter(
     (game) => game.result === "Won Match",
   );
 
-  console.log("winMatches");
+  // console.log("winMatches");
 
   const allItems: IAllArray[] = allGames
     .map((game) => {
@@ -104,7 +114,7 @@ export async function parserDotaBuff(
     })
     .flat();
 
-  console.log("allItems");
+  // console.log("allItems");
 
   const allHeroes: IAllArray[] = allGames
     .map((game) => {
@@ -115,7 +125,7 @@ export async function parserDotaBuff(
     })
     .flat();
 
-  console.log("allHeroes");
+  // console.log("allHeroes");
 
   const mostPopularHeroesWithoutStats: IAllArray[] = sortByPopularity(allHeroes)
     .reduce((acc: IAllArray[], curr) => {
@@ -126,7 +136,7 @@ export async function parserDotaBuff(
     }, [])
     .slice(0, TOTAL_TOP);
 
-  console.log("mostPopularHeroesWithoutStats");
+  // console.log("mostPopularHeroesWithoutStats");
 
   // todo: здесь очень долго
   const mostPopularItemsWithoutStats: IAllArray[] = sortByPopularity(allItems)
@@ -138,7 +148,7 @@ export async function parserDotaBuff(
     }, [])
     .slice(0, TOTAL_TOP);
 
-  console.log("mostPopularItemsWithoutStats");
+  // console.log("mostPopularItemsWithoutStats");
 
   const mostPopularItems: IMostPopular[] = [];
   const mostPopularHeroes: IMostPopular[] = [];
@@ -190,7 +200,7 @@ export async function parserDotaBuff(
     });
   }
 
-  console.log("LOOP FOR DONE");
+  // console.log("LOOP FOR DONE");
 
   const playerStats: IPlayerStats = {
     totalGames: allGames.length,
@@ -202,7 +212,16 @@ export async function parserDotaBuff(
     mostPopularItems,
   };
 
-  // todo: проверить полный ли сбор, если нет выкинуть SaveDataError с уже собранными данными
+  if (aborted.aborted && aborted.pageNumber !== null) {
+    throw new SaveDataError(
+      `Error: We were able to collect ${
+        (aborted.pageNumber - 1) * 50
+      }/${gamesCount} games. Other requests were blocked. Status code - ${
+        aborted.status
+      }`,
+      { playerName, avatarUrl, playerStats },
+    );
+  }
 
   return {
     playerName,
