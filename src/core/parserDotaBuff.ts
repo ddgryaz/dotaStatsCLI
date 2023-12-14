@@ -202,7 +202,7 @@ export async function parserDotaBuff(
     mostPopularItems,
   };
 
-  // todo: проверить полный ли сбор, если нет выкинуть LargeNumberOfRequestsError с уже собранными данными
+  // todo: проверить полный ли сбор, если нет выкинуть SaveDataError с уже собранными данными
 
   return {
     playerName,

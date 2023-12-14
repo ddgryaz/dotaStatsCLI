@@ -7,7 +7,7 @@ import { readFile } from "fs/promises";
 import * as path from "path";
 import { getTopCount } from "./core/getTopCount";
 import { IParserDotaBuffResult } from "./types/IParserDotaBuffResult";
-import { LargeNumberOfRequestsError } from "./errors/largeNumberOfRequestsError";
+import { SaveDataError } from "./errors/saveDataError";
 
 const http = fastify();
 const progressBar = ora();
@@ -25,7 +25,7 @@ async function main(): Promise<void> {
     data = await parserDotaBuff(Number(id), Number(totalGames));
     error = null;
   } catch (e) {
-    if (e instanceof LargeNumberOfRequestsError) {
+    if (e instanceof SaveDataError) {
       data = e.data;
       error = e.message;
     } else {
@@ -38,7 +38,6 @@ async function main(): Promise<void> {
 
   http.get(`/${id}`, async (request, reply) => {
     if (data) {
-      // todo: если ошибка есть, вставить ее где-то
       const validHtml = await readFile(
         path.join(__dirname, "..", "src", "templates", "index.html"),
         { encoding: "utf-8" },
@@ -106,6 +105,26 @@ async function main(): Promise<void> {
           "$HEROES",
           arrayHeroesForTable[i],
         );
+      }
+
+      if (error) {
+        const htmlBlockForError: string = `
+            <div class="saveDataError" style="display: flex; justify-content: center">
+                <blockquote>
+                  We were unable to obtain all the requested data. We received an error.
+                  <br />
+                  The error text is shown below.
+                  <br />
+                  <b>$ERROR_MESSAGE</b>
+                </blockquote>
+            </div>`.replace("$ERROR_MESSAGE", error);
+
+        modifiedValidHtml = modifiedValidHtml.replace(
+          "$ERROR_BLOCK",
+          htmlBlockForError,
+        );
+      } else {
+        modifiedValidHtml = modifiedValidHtml.replace("$ERROR_BLOCK", "");
       }
 
       reply.code(200).type("text/html; charset=utf-8").send(modifiedValidHtml);

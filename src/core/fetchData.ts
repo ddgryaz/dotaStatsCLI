@@ -10,9 +10,9 @@ export async function fetchData(
     {
       method: "GET",
       // todo: подумать как достать этот кук, без браузера
-      headers: {
-        Cookie: "__qca=P0-487207720-1702503572738;",
-      },
+      // headers: {
+      //   Cookie: "__qca=P0-487207720-1702503572738;",
+      // },
     },
   ).then(async (response) => {
     // todo: remove log
