@@ -5,6 +5,4 @@ export interface IParserDotaBuffResult {
   playerName: string;
   avatarUrl: string;
   playerStats: IPlayerStats;
-  // todo: не используется в визуализации? #1
-  // allGames: IAllGames[];
 }

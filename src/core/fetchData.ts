@@ -15,8 +15,6 @@ export async function fetchData(
       // },
     },
   ).then(async (response) => {
-    // todo: remove log
-    // console.log(response.status);
     return {
       html: await response.text(),
       status: response.status,

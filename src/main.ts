@@ -1,5 +1,4 @@
 import fastify from "fastify";
-import ora from "ora";
 import open from "open";
 import { parserDotaBuff } from "./core/parserDotaBuff";
 import * as process from "process";
@@ -8,9 +7,9 @@ import * as path from "path";
 import { getTopCount } from "./core/getTopCount";
 import { IParserDotaBuffResult } from "./types/IParserDotaBuffResult";
 import { SaveDataError } from "./errors/saveDataError";
+import { logger } from "./utils/logger";
 
 const http = fastify();
-const progressBar = ora();
 const [id, totalGames]: string[] = [process.argv[2], process.argv[3]];
 const HOST: string = "127.0.0.1";
 const PORT: number = 6781;
@@ -19,7 +18,7 @@ async function main(): Promise<void> {
   let data: IParserDotaBuffResult | null;
   let error: string | null;
 
-  progressBar.start("Get data...");
+  logger.info("Start of data collection...");
 
   try {
     data = await parserDotaBuff(Number(id), Number(totalGames));
@@ -34,7 +33,7 @@ async function main(): Promise<void> {
     }
   }
 
-  progressBar.stop();
+  logger.info("Creating a visualization.");
 
   http.get(`/${id}`, async (request, reply) => {
     if (data) {
@@ -148,7 +147,7 @@ async function main(): Promise<void> {
 const start = performance.now();
 main().then(() => {
   const end = performance.now();
-  console.log(
-    `Program running time: ${((end - start) / 1000).toFixed(2)} seconds`,
+  logger.info(
+    `Program running time: ${((end - start) / 1000).toFixed(2)} seconds.`,
   );
 });

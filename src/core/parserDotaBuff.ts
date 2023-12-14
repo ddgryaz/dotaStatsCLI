@@ -12,6 +12,7 @@ import { getTopCount } from "./getTopCount";
 import { BaseError } from "../errors/baseError";
 import { BanError } from "../errors/banError";
 import { SaveDataError } from "../errors/saveDataError";
+import { logger } from "../utils/logger";
 
 const matchesEndpoint: string =
   "https://www.dotabuff.com/players/REQUIRED_ID/matches?enhance=overview&page=PAGE_NUMBER";
@@ -95,13 +96,15 @@ export async function parserDotaBuff(
     await sleep(2_000);
   }
 
-  // console.log(`Data done! - ${allGames.length}`);
+  logger.info(
+    `Data collected - ${allGames.length} games. Running data aggregation.`,
+  );
 
   const winMatches: IAllGames[] = allGames.filter(
     (game) => game.result === "Won Match",
   );
 
-  // console.log("winMatches");
+  logger.info("Calculated matches won!");
 
   const allItems: IAllArray[] = allGames
     .map((game) => {
@@ -114,7 +117,7 @@ export async function parserDotaBuff(
     })
     .flat();
 
-  // console.log("allItems");
+  logger.info("Found all the items.");
 
   const allHeroes: IAllArray[] = allGames
     .map((game) => {
@@ -125,7 +128,7 @@ export async function parserDotaBuff(
     })
     .flat();
 
-  // console.log("allHeroes");
+  logger.info("Found all the heroes.");
 
   const mostPopularHeroesWithoutStats: IAllArray[] = sortByPopularity(allHeroes)
     .reduce((acc: IAllArray[], curr) => {
@@ -136,7 +139,7 @@ export async function parserDotaBuff(
     }, [])
     .slice(0, TOTAL_TOP);
 
-  // console.log("mostPopularHeroesWithoutStats");
+  logger.info("Made a top list of your heroes.");
 
   // todo: здесь очень долго
   const mostPopularItemsWithoutStats: IAllArray[] = sortByPopularity(allItems)
@@ -148,7 +151,7 @@ export async function parserDotaBuff(
     }, [])
     .slice(0, TOTAL_TOP);
 
-  // console.log("mostPopularItemsWithoutStats");
+  logger.info("Made a top list of your items.");
 
   const mostPopularItems: IMostPopular[] = [];
   const mostPopularHeroes: IMostPopular[] = [];
@@ -200,8 +203,6 @@ export async function parserDotaBuff(
     });
   }
 
-  // console.log("LOOP FOR DONE");
-
   const playerStats: IPlayerStats = {
     totalGames: allGames.length,
     win: winMatches.length,
@@ -211,6 +212,8 @@ export async function parserDotaBuff(
     mostPopularHeroes,
     mostPopularItems,
   };
+
+  logger.info("Aggregated your items and heroes!");
 
   if (aborted.aborted && aborted.pageNumber !== null) {
     throw new SaveDataError(
@@ -227,7 +230,5 @@ export async function parserDotaBuff(
     playerName,
     avatarUrl,
     playerStats,
-    // todo: не используется в визуализации? #1
-    // allGames,
   };
 }
