@@ -13,6 +13,7 @@ import { BaseError } from "../errors/baseError";
 import { BanError } from "../errors/banError";
 import { SaveDataError } from "../errors/saveDataError";
 import { logger } from "../utils/logger";
+import { ImpossibleGetDataError } from "../errors/impossibleGetDataError";
 
 const matchesEndpoint: string =
   "https://www.dotabuff.com/players/REQUIRED_ID/matches?enhance=overview&page=PAGE_NUMBER";
@@ -21,8 +22,12 @@ export async function parserDotaBuff(
   id: number,
   gamesCount: number,
 ): Promise<IParserDotaBuffResult> {
-  if (gamesCount <= 0) throw new Error("The value cannot be less than zero");
-  if (!id) throw new Error("Required parameter");
+  if (gamesCount <= 0 || !gamesCount)
+    throw new BaseError(
+      "Error: gamesCount - the value cannot be less than zero.",
+    );
+
+  if (!id) throw new BaseError("Error: id - required parameter.");
 
   const pageCount: number = Math.ceil(gamesCount / 50);
   const TOTAL_TOP = getTopCount(gamesCount); // todo: адаптировать под неполный результат, в случае если заранее вышли из цикла запросов
@@ -52,7 +57,25 @@ export async function parserDotaBuff(
 
   const { document } = new JSDOM(html).window;
 
-  // todo: добавить проверку на наличие данные, или на приватный профиль, или на существование профиля. В случае нахождения - выкидываем 404 с соответствующим текстом.
+  const privateProfile =
+    document
+      .querySelector("div.intro.intro-smaller h1")
+      ?.textContent?.trim()
+      ?.toLowerCase()
+      ?.includes("profile is private") || false;
+
+  const notFoundPage =
+    document
+      .querySelector("h2[id='status']")
+      ?.textContent?.trim()
+      ?.toLowerCase()
+      ?.includes("not found") || false;
+
+  if (privateProfile || notFoundPage) {
+    throw new ImpossibleGetDataError(
+      "Error: Player profile is private or does not exist.",
+    );
+  }
 
   const playerName: string =
     document
@@ -79,12 +102,13 @@ export async function parserDotaBuff(
 
     const { document } = new JSDOM(html).window;
 
-    const noDataTrigger: boolean | null =
+    // todo: проверить функциональность и гарантировать сбор данных до данного триггера
+    const noDataTrigger: boolean =
       document
         .querySelector("table tbody tr td")
         ?.textContent?.trim()
         ?.toLowerCase()
-        ?.includes("no data for this period") || null;
+        ?.includes("no data for this period") || false;
 
     if (noDataTrigger) {
       break;
