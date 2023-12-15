@@ -30,7 +30,7 @@ export async function parserDotaBuff(
   if (!id) throw new BaseError("Error: id - required parameter.");
 
   const pageCount: number = Math.ceil(gamesCount / 50);
-  const TOTAL_TOP = getTopCount(gamesCount); // todo: адаптировать под неполный результат, в случае если заранее вышли из цикла запросов
+
   let aborted: {
     aborted: boolean;
     pageNumber: number | null;
@@ -122,6 +122,8 @@ export async function parserDotaBuff(
   logger.info(
     `Data collected - ${allGames.length} games. Running data aggregation.`,
   );
+
+  const TOTAL_TOP = getTopCount(allGames.length);
 
   const winMatches: IAllGames[] = allGames.filter(
     (game) => game.result === "Won Match",
@@ -245,7 +247,7 @@ export async function parserDotaBuff(
       }/${gamesCount} games. Other requests were blocked. Status code - ${
         aborted.status
       }`,
-      { playerName, avatarUrl, playerStats },
+      { playerName, avatarUrl, playerStats, TOTAL_TOP },
     );
   }
 
@@ -253,5 +255,6 @@ export async function parserDotaBuff(
     playerName,
     avatarUrl,
     playerStats,
+    TOTAL_TOP,
   };
 }

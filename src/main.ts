@@ -13,7 +13,6 @@ const http = fastify();
 const [id, totalGames]: string[] = [process.argv[2], process.argv[3]];
 const HOST: string = "127.0.0.1";
 const PORT: number = 6781;
-const TOTAL_TOP: number = getTopCount(Number(totalGames));
 async function main(): Promise<void> {
   let data: IParserDotaBuffResult | null;
   let error: string | null;
@@ -91,10 +90,10 @@ async function main(): Promise<void> {
         .replace("$PLAYER_WIN", data.playerStats.win.toString())
         .replace("$PLAYER_LOSE", data.playerStats.lose.toString())
         .replace("$PLAYER_WINRATE", data.playerStats.overallWinRate.toString())
-        .replace("$ITEMS", "$ITEMS ".repeat(TOTAL_TOP))
-        .replace("$HEROES", "$HEROES ".repeat(TOTAL_TOP));
+        .replace("$ITEMS", "$ITEMS ".repeat(data.TOTAL_TOP))
+        .replace("$HEROES", "$HEROES ".repeat(data.TOTAL_TOP));
 
-      for (let i = 0; i < TOTAL_TOP; i++) {
+      for (let i = 0; i < data.TOTAL_TOP; i++) {
         modifiedValidHtml = modifiedValidHtml.replace(
           "$ITEMS",
           arrayItemsForTable[i],
