@@ -128,13 +128,23 @@ async function main(): Promise<void> {
 
       reply.code(200).type("text/html; charset=utf-8").send(modifiedValidHtml);
     } else {
-      // todo: реализовать шаблон ошибки и отдавать его в случае ее присутствия
       const validHtml = await readFile(
-        path.join(__dirname, "..", "src", "templates", "404.html"),
+        path.join(__dirname, "..", "src", "templates", "errorTemplate.html"),
         { encoding: "utf-8" },
       );
 
-      reply.code(200).type("text/html; charset=utf-8").send(validHtml);
+      let modifiedValidHtml: string;
+
+      if (error) {
+        modifiedValidHtml = validHtml.replace("$ERROR_MESSAGE", error);
+      } else {
+        modifiedValidHtml = validHtml.replace(
+          "$ERROR_MESSAGE",
+          "Error: If you see this text, please report it to the app developers",
+        );
+      }
+
+      reply.code(500).type("text/html; charset=utf-8").send(modifiedValidHtml);
     }
 
     process.exit(0);
