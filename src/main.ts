@@ -4,7 +4,6 @@ import { parserDotaBuff } from "./core/parserDotaBuff";
 import * as process from "process";
 import { readFile } from "fs/promises";
 import * as path from "path";
-import { getTopCount } from "./core/getTopCount";
 import { IParserDotaBuffResult } from "./types/IParserDotaBuffResult";
 import { SaveDataError } from "./errors/saveDataError";
 import { logger } from "./utils/logger";

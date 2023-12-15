@@ -19,6 +19,7 @@
     "strictFunctionTypes": true,
     "noImplicitThis": true,
     "noImplicitAny": true,
+    "noUnusedLocals": true,
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false,
