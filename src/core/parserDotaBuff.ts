@@ -102,7 +102,6 @@ export async function parserDotaBuff(
 
     const { document } = new JSDOM(html).window;
 
-    // todo: проверить функциональность и гарантировать сбор данных до данного триггера
     const noDataTrigger: boolean =
       document
         .querySelector("table tbody tr td")
