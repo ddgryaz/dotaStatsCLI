@@ -9,8 +9,7 @@
     "start": "npm run build && node dist/main.js",
     "dima": "npm run build && node dist/main.js 64015685 50",
     "siva": "npm run build && node dist/main.js 73325963 50",
-    "serj": "npm run build && node dist/main.js 73646633 50",
-    "parser": "ts-node src/parser.ts"
+    "serj": "npm run build && node dist/main.js 73646633 50"
   },
   "keywords": [],
   "author": "",
