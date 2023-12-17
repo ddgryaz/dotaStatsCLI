@@ -30,8 +30,6 @@ export async function getMatches(
 
   const { json, status, success } = dataWithMatchesInfo;
 
-  console.log(json.length);
-
   if ("error" in json && !success) {
     throw new BaseError(`Error: ${json.error}. Status code: ${status}.`);
   }

@@ -7,19 +7,52 @@ import * as path from "path";
 import { IParserDotaBuffResult } from "./types/IParserDotaBuffResult";
 import { SaveDataError } from "./errors/saveDataError";
 import { logger } from "./utils/logger";
+import { openDotaApi } from "./core/openDota/openDotaAPI";
+import inquirer from "inquirer";
 
 const http = fastify();
 const [id, totalGames]: string[] = [process.argv[2], process.argv[3]];
 const HOST: string = "127.0.0.1";
 const PORT: number = 6781;
+
+/*
+ * todo:
+ *  Изменить верстку, чтобы не было скроллинга.
+ *  Добавить логи к openDotaApi.
+ *  Добавить подсказку к выбору провайдер (рекомендовано)
+ *
+ */
+
+const providers = [
+  {
+    name: "openDota",
+    value: openDotaApi,
+  },
+  {
+    name: "dotaBuff",
+    value: parserDotaBuff,
+  },
+];
+
 async function main(): Promise<void> {
+  const { service } = await inquirer.prompt([
+    {
+      type: "list",
+      name: "service",
+      message: "Select a data provider:",
+      choices: providers,
+    },
+  ]);
+
+  const provider = providers.find((el) => el.value === service);
+
   let data: IParserDotaBuffResult | null;
   let error: string | null;
 
   logger.info("Start of data collection...");
 
   try {
-    data = await parserDotaBuff(Number(id), Number(totalGames));
+    data = await service(Number(id), Number(totalGames));
     error = null;
   } catch (e) {
     if (e instanceof SaveDataError) {
@@ -82,8 +115,14 @@ async function main(): Promise<void> {
             </tr>`;
         });
 
+      const htmlBlockForProvider: string = `
+            <div style="display: flex; justify-content: center">
+                <h4>Your data provider - ${provider?.name}</h4>
+            </div>`;
+
       let modifiedValidHtml = validHtml
         .replace("$NICKNAME", data.playerName)
+        .replace("$PROVIDER", htmlBlockForProvider)
         .replace("$AVATAR_URL", data.avatarUrl)
         .replace("$PLAYER_TOTALGAMES", data.playerStats.totalGames.toString())
         .replace("$PLAYER_WIN", data.playerStats.win.toString())

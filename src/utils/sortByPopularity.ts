@@ -15,6 +15,7 @@ export function sortByPopularity<Type>(array: Type[]): Type[] {
       )
       .reverse();
   } else {
+    // todo: или здесь баг, я хз
     return array
       .sort((a, b) => {
         return (a as number) - (b as number);
