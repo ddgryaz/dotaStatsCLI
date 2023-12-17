@@ -1,19 +1,19 @@
 import { JSDOM } from "jsdom";
-import { IAllGames } from "../types/IAllGames";
-import { sortByPopularity } from "../utils/sortByPopularity";
-import { IMostPopular } from "../types/IMostPopular";
-import { IPlayerStats } from "../types/IPlayerStats";
-import { IParserDotaBuffResult } from "../types/IParserDotaBuffResult";
-import { sleep } from "../utils/sleep";
+import { IAllGames } from "./types/IAllGames";
+import { sortByPopularity } from "../../utils/sortByPopularity";
+import { IMostPopular } from "./types/IMostPopular";
+import { IPlayerStats } from "./types/IPlayerStats";
+import { IParserDotaBuffResult } from "../../types/IParserDotaBuffResult";
+import { sleep } from "../../utils/sleep";
 import { fetchData } from "./fetchData";
 import { collectAllGames } from "./collectAllGames";
-import { IAllArray } from "../types/IAllArray";
-import { getTopCount } from "./getTopCount";
-import { BaseError } from "../errors/baseError";
-import { BanError } from "../errors/banError";
-import { SaveDataError } from "../errors/saveDataError";
-import { logger } from "../utils/logger";
-import { ImpossibleGetDataError } from "../errors/impossibleGetDataError";
+import { IAllArray } from "./types/IAllArray";
+import { getTopCount } from "../getTopCount";
+import { BaseError } from "../../errors/baseError";
+import { BanError } from "../../errors/banError";
+import { SaveDataError } from "../../errors/saveDataError";
+import { logger } from "../../utils/logger";
+import { ImpossibleGetDataError } from "../../errors/impossibleGetDataError";
 
 const matchesEndpoint: string =
   "https://www.dotabuff.com/players/REQUIRED_ID/matches?enhance=overview&page=PAGE_NUMBER";

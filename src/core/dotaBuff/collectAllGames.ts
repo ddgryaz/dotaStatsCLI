@@ -1,5 +1,5 @@
-import { IAllGames } from "../types/IAllGames";
-import { IAllArray } from "../types/IAllArray";
+import { IAllGames } from "./types/IAllGames";
+import { IAllArray } from "./types/IAllArray";
 
 export function collectAllGames(document: Document): IAllGames[] {
   return Array.from(document.querySelectorAll("table tbody tr")).map(

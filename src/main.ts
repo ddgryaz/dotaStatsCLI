@@ -1,6 +1,6 @@
 import fastify from "fastify";
 import open from "open";
-import { parserDotaBuff } from "./core/parserDotaBuff";
+import { parserDotaBuff } from "./core/dotaBuff/parserDotaBuff";
 import * as process from "process";
 import { readFile } from "fs/promises";
 import * as path from "path";
