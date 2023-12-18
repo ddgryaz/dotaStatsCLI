@@ -9,6 +9,8 @@ import { SaveDataError } from "./errors/saveDataError";
 import { logger } from "./utils/logger";
 import { openDotaApi } from "./core/openDota/openDotaAPI";
 import inquirer from "inquirer";
+import { APPLICATION_NAME } from "./constants/applicationName";
+import { ROUTER_NAME } from "./constants/routerName";
 
 const http = fastify();
 const [id, totalGames]: string[] = [process.argv[2], process.argv[3]];
@@ -19,7 +21,7 @@ const PORT: number = 6781;
  * todo:
  *  Изменить верстку, чтобы не было скроллинга.
  *  Добавить логи к openDotaApi.
- *  Добавить подсказку к выбору провайдер (рекомендовано)
+ *  Добавить подсказку к выбору провайдер (рекомендовано).
  *
  */
 
@@ -45,6 +47,10 @@ async function main(): Promise<void> {
   ]);
 
   const provider = providers.find((el) => el.value === service);
+  const FULL_ROUTER_NAME: string = ROUTER_NAME.replace(
+    "$PROVIDER",
+    provider?.name as string,
+  ).replace("$ID", id);
 
   let data: IProviderResult | null;
   let error: string | null;
@@ -66,7 +72,7 @@ async function main(): Promise<void> {
 
   logger.info("Creating a visualization.");
 
-  http.get(`/${id}`, async (request, reply) => {
+  http.get(FULL_ROUTER_NAME, async (request, reply) => {
     if (data) {
       const validHtml = await readFile(
         path.join(__dirname, "..", "src", "templates", "index.html"),
@@ -121,6 +127,7 @@ async function main(): Promise<void> {
             </div>`;
 
       let modifiedValidHtml = validHtml
+        .replaceAll("$APPNAME", APPLICATION_NAME)
         .replace("$NICKNAME", data.playerName)
         .replace("$PROVIDER", htmlBlockForProvider)
         .replace("$AVATAR_URL", data.avatarUrl)
@@ -173,12 +180,16 @@ async function main(): Promise<void> {
       let modifiedValidHtml: string;
 
       if (error) {
-        modifiedValidHtml = validHtml.replace("$ERROR_MESSAGE", error);
+        modifiedValidHtml = validHtml
+          .replace("$ERROR_MESSAGE", error)
+          .replaceAll("$APPNAME", APPLICATION_NAME);
       } else {
-        modifiedValidHtml = validHtml.replace(
-          "$ERROR_MESSAGE",
-          "Error: If you see this text, please report it to the app developers",
-        );
+        modifiedValidHtml = validHtml
+          .replace(
+            "$ERROR_MESSAGE",
+            "Error: If you see this text, please report it to the app developers",
+          )
+          .replaceAll("$APPNAME", APPLICATION_NAME);
       }
 
       reply.code(500).type("text/html; charset=utf-8").send(modifiedValidHtml);
@@ -188,7 +199,7 @@ async function main(): Promise<void> {
   });
 
   await http.listen({ host: HOST, port: PORT });
-  await open(`http://localhost:${PORT}/${id}`);
+  await open(`http://localhost:${PORT}${FULL_ROUTER_NAME}`);
 }
 
 const start = performance.now();
