@@ -1,6 +1,6 @@
 import { IPlayerStats } from "../core/dotaBuff/types/IPlayerStats";
 
-export interface IParserDotaBuffResult {
+export interface IProviderResult {
   playerName: string;
   avatarUrl: string;
   playerStats: IPlayerStats;

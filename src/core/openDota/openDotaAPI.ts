@@ -7,6 +7,7 @@ import { IMostPopular } from "../dotaBuff/types/IMostPopular";
 import { getImageAndNameIOrH } from "./getImageAndNameIOrH";
 import { IPlayerStats } from "../dotaBuff/types/IPlayerStats";
 import { sleep } from "../../utils/sleep";
+import { IProviderResult } from "../../types/IProviderResult";
 
 const providerHost = "https://api.opendota.com";
 const playerEndpoint = `${providerHost}/api/players/REQUIRED_ID`;
@@ -14,7 +15,10 @@ const matchesEndpoint = `${providerHost}/api/players/REQUIRED_ID/matches?signifi
 const heroesInfoEndpoint = `${providerHost}/api/constants/heroes`;
 const itemsInfoEndpoint = `${providerHost}/api/constants/items`;
 
-export async function openDotaApi(id: number, gamesCount: number) {
+export async function openDotaApi(
+  id: number,
+  gamesCount: number,
+): Promise<IProviderResult> {
   if (gamesCount <= 0 || !gamesCount)
     throw new BaseError(
       "Error: gamesCount - the value cannot be less than zero.",

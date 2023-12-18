@@ -4,7 +4,7 @@ import { parserDotaBuff } from "./core/dotaBuff/parserDotaBuff";
 import * as process from "process";
 import { readFile } from "fs/promises";
 import * as path from "path";
-import { IParserDotaBuffResult } from "./types/IParserDotaBuffResult";
+import { IProviderResult } from "./types/IProviderResult";
 import { SaveDataError } from "./errors/saveDataError";
 import { logger } from "./utils/logger";
 import { openDotaApi } from "./core/openDota/openDotaAPI";
@@ -46,7 +46,7 @@ async function main(): Promise<void> {
 
   const provider = providers.find((el) => el.value === service);
 
-  let data: IParserDotaBuffResult | null;
+  let data: IProviderResult | null;
   let error: string | null;
 
   logger.info("Start of data collection...");

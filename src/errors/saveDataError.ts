@@ -1,11 +1,11 @@
 import { BaseError } from "./baseError";
-import { IParserDotaBuffResult } from "../types/IParserDotaBuffResult";
+import { IProviderResult } from "../types/IProviderResult";
 
 export class SaveDataError extends BaseError {
-  readonly data: IParserDotaBuffResult;
+  readonly data: IProviderResult;
   constructor(
     readonly message: string,
-    data: IParserDotaBuffResult,
+    data: IProviderResult,
   ) {
     super(message);
     this.data = data;

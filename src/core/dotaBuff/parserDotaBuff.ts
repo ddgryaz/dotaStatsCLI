@@ -3,7 +3,7 @@ import { IAllGames } from "./types/IAllGames";
 import { sortByPopularity } from "../../utils/sortByPopularity";
 import { IMostPopular } from "./types/IMostPopular";
 import { IPlayerStats } from "./types/IPlayerStats";
-import { IParserDotaBuffResult } from "../../types/IParserDotaBuffResult";
+import { IProviderResult } from "../../types/IProviderResult";
 import { sleep } from "../../utils/sleep";
 import { fetchData } from "./fetchData";
 import { collectAllGames } from "./collectAllGames";
@@ -21,7 +21,7 @@ const matchesEndpoint: string =
 export async function parserDotaBuff(
   id: number,
   gamesCount: number,
-): Promise<IParserDotaBuffResult> {
+): Promise<IProviderResult> {
   if (gamesCount <= 0 || !gamesCount)
     throw new BaseError(
       "Error: gamesCount - the value cannot be less than zero.",
