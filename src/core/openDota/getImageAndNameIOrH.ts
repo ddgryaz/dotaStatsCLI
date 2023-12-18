@@ -50,7 +50,10 @@ export async function getImageAndNameIOrH(
 
       if (item) {
         return {
-          name: item.dname,
+          name: item.dname
+            ?.split(/\s+/)
+            ?.map((word) => word[0].toUpperCase() + word.substring(1))
+            ?.join(" "),
           avatar: steamHostForImage.concat(item.img),
         };
       } else {
