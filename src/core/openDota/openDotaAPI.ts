@@ -15,6 +15,9 @@ const matchesEndpoint = `${providerHost}/api/players/REQUIRED_ID/matches?signifi
 const heroesInfoEndpoint = `${providerHost}/api/constants/heroes`;
 const itemsInfoEndpoint = `${providerHost}/api/constants/items`;
 
+// todo: генерация matchesEndpoint через new URL + добавление сюда &project=kills&project=deaths&project=assists&project=duration
+//  для реализации рекордов.
+
 export async function openDotaApi(
   id: number,
   gamesCount: number,
