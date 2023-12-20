@@ -2,8 +2,15 @@ import { IAllGames } from "./types/IAllGames";
 import { IAllArray } from "./types/IAllArray";
 
 function calcDuration(durationRaw: string): number {
-  const [minutes, seconds] = durationRaw.split(":");
-  return Number(minutes) * 60 + Number(seconds);
+  const timeElements = durationRaw.split(":");
+
+  if (timeElements.length > 2) {
+    const [hours, minutes, seconds] = timeElements;
+    return Number(hours) * 3600 + Number(minutes) * 60 + Number(seconds);
+  } else {
+    const [minutes, seconds] = timeElements;
+    return Number(minutes) * 60 + Number(seconds);
+  }
 }
 
 export function collectAllGames(document: Document): IAllGames[] {
