@@ -1,5 +1,5 @@
-import { IAllGames } from "./dotaBuff/types/IAllGames";
-import { IRecords } from "../types/IRecords";
+import { IAllGames } from "./types/IAllGames";
+import { IRecords } from "./types/IRecords";
 
 export function getRecords(arrayWithGames: IAllGames[]): IRecords {
   const gameWithRecordKills = arrayWithGames.reduce((acc, curr) =>

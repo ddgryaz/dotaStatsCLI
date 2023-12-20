@@ -9,5 +9,9 @@ export interface IMatchesReqResponse {
   item_4: number;
   item_5: number;
   hero_id: number;
-  game_mode: number;
+  kills: number;
+  deaths: number;
+  assists: number;
+  matchUrl: string;
+  duration: number; // in seconds
 }

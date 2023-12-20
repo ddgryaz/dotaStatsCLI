@@ -10,15 +10,13 @@ import { IPlayerStats } from "../dotaBuff/types/IPlayerStats";
 import { sleep } from "../../utils/sleep";
 import { IProviderResult } from "../../types/IProviderResult";
 import { logger } from "../../utils/logger";
+import { IAllMatches } from "./types/IAllMatches";
 
 const providerHost = "https://api.opendota.com";
 const playerEndpoint = `${providerHost}/api/players/REQUIRED_ID`;
-const matchesEndpoint = `${providerHost}/api/players/REQUIRED_ID/matches?significant=0&project=item_0&project=item_1&project=item_2&project=item_3&project=item_4&project=item_5&project=hero_id&project=game_mode&limit=GAMES_COUNT`;
+const matchesEndpoint = `${providerHost}/api/players/REQUIRED_ID/matches?significant=0&project=item_0&project=item_1&project=item_2&project=item_3&project=item_4&project=item_5&project=hero_id&project=kills&project=deaths&project=assists&project=duration&limit=GAMES_COUNT`;
 const heroesInfoEndpoint = `${providerHost}/api/constants/heroes`;
 const itemsInfoEndpoint = `${providerHost}/api/constants/items`;
-
-// todo: генерация matchesEndpoint через new URL + добавление сюда &project=kills&project=deaths&project=assists&project=duration
-//  для реализации рекордов.
 
 export async function openDotaApi(
   id: number,
@@ -35,7 +33,13 @@ export async function openDotaApi(
 
   const { playerName, avatarUrl } = await getNameAndAvatar(id, playerEndpoint);
 
-  const matches = await getMatches(id, gamesCount, matchesEndpoint);
+  const matches: IAllMatches[] = await getMatches(
+    id,
+    gamesCount,
+    matchesEndpoint,
+  );
+
+  // todo: выкинуть предупреждение, что мы собрали все доступные игры
 
   logger.info(
     `Data collected - ${matches.length} games. Running data aggregation.`,
