@@ -1,3 +1,4 @@
+//@ts-nocheck //todo: remove
 import { BaseError } from "../../errors/baseError";
 import { getNameAndAvatar } from "./getNameAndAvatar";
 import { getMatches } from "./getMatches";

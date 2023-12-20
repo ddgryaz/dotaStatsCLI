@@ -14,6 +14,8 @@ import { BanError } from "../../errors/banError";
 import { SaveDataError } from "../../errors/saveDataError";
 import { logger } from "../../utils/logger";
 import { ImpossibleGetDataError } from "../../errors/impossibleGetDataError";
+import { getRecords } from "../getRecords";
+import { IRecords } from "../../types/IRecords";
 
 const matchesEndpoint: string =
   "https://www.dotabuff.com/players/REQUIRED_ID/matches?enhance=overview&page=PAGE_NUMBER";
@@ -178,6 +180,11 @@ export async function parserDotaBuff(
 
   logger.info("Made a top list of your items.");
 
+  const { recordKills, recordDeaths, recordAssists, recordDuration }: IRecords =
+    getRecords(allGames);
+
+  logger.info(`Calculated your records for ${allGames.length} games.`);
+
   const mostPopularItems: IMostPopular[] = [];
   const mostPopularHeroes: IMostPopular[] = [];
 
@@ -240,6 +247,19 @@ export async function parserDotaBuff(
 
   logger.info("Aggregated your items and heroes!");
 
+  const result: IProviderResult = {
+    playerName,
+    avatarUrl,
+    playerStats,
+    TOTAL_TOP,
+    records: {
+      recordKills,
+      recordDeaths,
+      recordAssists,
+      recordDuration,
+    },
+  };
+
   if (aborted.aborted && aborted.pageNumber !== null) {
     throw new SaveDataError(
       `Error: We were able to collect ${
@@ -247,14 +267,9 @@ export async function parserDotaBuff(
       }/${gamesCount} games. Other requests were blocked. Status code - ${
         aborted.status
       }`,
-      { playerName, avatarUrl, playerStats, TOTAL_TOP },
+      result,
     );
   }
 
-  return {
-    playerName,
-    avatarUrl,
-    playerStats,
-    TOTAL_TOP,
-  };
+  return result;
 }

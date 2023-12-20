@@ -5,4 +5,9 @@ export interface IAllGames {
   heroAvatar: string;
   result: string;
   items: IAllArray[];
+  kills: number;
+  deaths: number;
+  assists: number;
+  matchUrl: string;
+  duration: number; // in seconds
 }

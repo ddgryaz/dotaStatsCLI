@@ -1,9 +1,33 @@
 import { IAllGames } from "./types/IAllGames";
 import { IAllArray } from "./types/IAllArray";
 
+function calcDuration(durationRaw: string): number {
+  const [minutes, seconds] = durationRaw.split(":");
+  return Number(minutes) * 60 + Number(seconds);
+}
+
 export function collectAllGames(document: Document): IAllGames[] {
   return Array.from(document.querySelectorAll("table tbody tr")).map(
     (gameRow) => {
+      const KDA = Array.from(
+        gameRow.querySelectorAll("span.kda-record span.value"),
+      ).map((el) => {
+        return el?.textContent?.trim() || "";
+      });
+
+      const [kills, deaths, assists]: string[] = KDA;
+
+      const matchUrl: string = "https://www.dotabuff.com".concat(
+        gameRow
+          .querySelector("td.cell-centered.r-none-mobile + td a")
+          ?.getAttribute("href") || "",
+      );
+
+      const durationRaw: string =
+        gameRow
+          .querySelector("td.r-none-mobile:not(.cell-centered) + td")
+          ?.textContent?.trim() || "";
+
       return {
         heroAvatar:
           "https://www.dotabuff.com".concat(
@@ -35,6 +59,11 @@ export function collectAllGames(document: Document): IAllGames[] {
             ),
           };
         }),
+        kills: Number(kills),
+        deaths: Number(deaths),
+        assists: Number(assists),
+        matchUrl,
+        duration: calcDuration(durationRaw),
       };
     },
   );
