@@ -8,6 +8,7 @@ import { getImageAndNameIOrH } from "./getImageAndNameIOrH";
 import { IPlayerStats } from "../dotaBuff/types/IPlayerStats";
 import { sleep } from "../../utils/sleep";
 import { IProviderResult } from "../../types/IProviderResult";
+import { logger } from "../../utils/logger";
 
 const providerHost = "https://api.opendota.com";
 const playerEndpoint = `${providerHost}/api/players/REQUIRED_ID`;
@@ -34,6 +35,10 @@ export async function openDotaApi(
   const { playerName, avatarUrl } = await getNameAndAvatar(id, playerEndpoint);
 
   const matches = await getMatches(id, gamesCount, matchesEndpoint);
+
+  logger.info(
+    `Data collected - ${matches.length} games. Running data aggregation.`,
+  );
 
   // todo: выкинуть предупреждение, что мы собрали все доступные игры
 
@@ -63,6 +68,8 @@ export async function openDotaApi(
 
   const mostPopularItems: IMostPopular[] = [];
   const mostPopularHeroes: IMostPopular[] = [];
+
+  logger.info("Matches won, popular heroes and items calculated.");
 
   for (let i: number = 0; i < TOTAL_TOP; i++) {
     const coincidencesHero = sortByPopularity(allHeroesIds).filter(
@@ -117,6 +124,8 @@ export async function openDotaApi(
         "%",
     });
   }
+
+  logger.info("A rating of items and heroes has been formed.");
 
   const playerStats: IPlayerStats = {
     totalGames: matches.length,
