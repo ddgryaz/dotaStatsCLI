@@ -15,6 +15,7 @@ import { fastifyStatic } from "@fastify/static";
 import { sleep } from "./utils/sleep";
 import { TIME_TO_CLOSE_APP } from "./constants/timeToCloseApp";
 import { getDateTime } from "./utils/getDateTime";
+import { IRecord } from "./types/IRecords";
 
 const http = fastify();
 const [id, totalGames]: string[] = [process.argv[2], process.argv[3]];
@@ -106,17 +107,73 @@ async function main(): Promise<void> {
     prefix: "/styles/",
   });
 
+  http.register(fastifyStatic, {
+    root: path.join(__dirname, "..", "src", "templates", "images"),
+    prefix: "/images/",
+    decorateReply: false,
+  });
+
   http.get(FULL_ROUTER_NAME + "/styles/index.css", function (req, reply) {
     reply.sendFile(
       path.join(__dirname, "..", "src", "templates", "styles", "index.css"),
     );
   });
 
+  http.get(FULL_ROUTER_NAME + "/images/dotaBg.jpeg", function (req, reply) {
+    reply.sendFile(
+      path.join(__dirname, "..", "src", "templates", "images", "dotaBg.jpeg"),
+    );
+  });
+
+  if (!data) {
+    http.get(FULL_ROUTER_NAME + "/images/sadHero.png", function (req, reply) {
+      reply.sendFile(
+        path.join(__dirname, "..", "src", "templates", "images", "sadHero.png"),
+      );
+    });
+
+    http.get(FULL_ROUTER_NAME + "/images/bg.png", function (req, reply) {
+      reply.sendFile(
+        path.join(__dirname, "..", "src", "templates", "images", "bg.png"),
+      );
+    });
+  }
+
   http.get(FULL_ROUTER_NAME, async (request, reply) => {
     if (data) {
       const validHtml = await readFile(
         path.join(__dirname, "..", "src", "templates", "html", "index.html"),
         { encoding: "utf-8" },
+      );
+
+      const recordsBlocks: string[] = Object.entries(data.records).map(
+        (record: [string, IRecord]): string => {
+          const [key, value]: [string, IRecord] = record;
+
+          return `
+          <a class="player__item" href="${value.matchUrl}" target="_blank">
+            <div class="player__image-filter"></div>
+            <img src="/images/dotaBg.jpeg" alt="" />
+            <ul class="player__item-list">
+              <li>
+                <p class="record-value">${key}</p>
+              </li>
+              <li>
+                <p class="record-number">${value.value}</p>
+              </li>
+              <li>
+              <p class="record-value">${value.hero}</p>
+              </li>
+              <li>
+                <p class=${
+                  value.result === "Won Match"
+                    ? "record-text-won"
+                    : "record-text-lost"
+                }>${value.result}</p>
+              </li>
+            </ul>
+          </a>`;
+        },
       );
 
       const arrayHeroesForTable: string[] =
@@ -151,7 +208,7 @@ async function main(): Promise<void> {
 
       const htmlBlockForProvider: string = `
             <div style="display: flex; justify-content: center">
-                <h4>Your data provider - ${provider?.name}</h4>
+                <h4>Your data provider - ${provider?.name?.toUpperCase()}</h4>
             </div>`;
 
       let modifiedValidHtml = validHtml
@@ -165,7 +222,15 @@ async function main(): Promise<void> {
         .replace("$PLAYER_LOSE", data.playerStats.lose.toString())
         .replace("$PLAYER_WINRATE", data.playerStats.overallWinRate.toString())
         .replace("$ITEMS", "$ITEMS ".repeat(data.TOTAL_TOP))
-        .replace("$HEROES", "$HEROES ".repeat(data.TOTAL_TOP));
+        .replace("$HEROES", "$HEROES ".repeat(data.TOTAL_TOP))
+        .replace("$RECORDS", "$RECORDS ".repeat(recordsBlocks.length));
+
+      for (let i = 0; i < recordsBlocks.length; i++) {
+        modifiedValidHtml = modifiedValidHtml.replace(
+          "$RECORDS",
+          recordsBlocks[i],
+        );
+      }
 
       for (let i = 0; i < data.TOTAL_TOP; i++) {
         modifiedValidHtml = modifiedValidHtml.replace(
@@ -208,7 +273,7 @@ async function main(): Promise<void> {
       reply.code(200).type("text/html; charset=utf-8").send(modifiedValidHtml);
     } else {
       const validHtml = await readFile(
-        path.join(__dirname, "..", "src", "templates", "errorTemplate.html"),
+        path.join(__dirname, "..", "src", "templates", "html", "error.html"),
         { encoding: "utf-8" },
       );
 
@@ -235,6 +300,7 @@ async function main(): Promise<void> {
         TIME_TO_CLOSE_APP / 1000
       } seconds. See you soon!`,
     );
+
     await sleep(TIME_TO_CLOSE_APP);
     process.exit(0);
   });

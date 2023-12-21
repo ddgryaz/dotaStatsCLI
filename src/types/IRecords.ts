@@ -1,10 +1,13 @@
-interface IRecord {
-  value: number;
+export interface IRecord {
+  value: string | number;
   hero: string;
-  heroAvatar: string;
   matchUrl: string;
+  result: string;
 }
 
 export interface IRecords {
-  [key: string]: IRecord;
+  "Most Kills": IRecord;
+  "Most Deaths": IRecord;
+  "Most Assists": IRecord;
+  "Longest Match": IRecord;
 }

@@ -180,8 +180,7 @@ export async function parserDotaBuff(
 
   logger.info("Made a top list of your items.");
 
-  const { recordKills, recordDeaths, recordAssists, recordDuration }: IRecords =
-    calcRecordsFromDotaBuff(allGames);
+  const records: IRecords = calcRecordsFromDotaBuff(allGames);
 
   logger.info(`Calculated your records for ${allGames.length} games.`);
 
@@ -252,12 +251,7 @@ export async function parserDotaBuff(
     avatarUrl,
     playerStats,
     TOTAL_TOP,
-    records: {
-      recordKills,
-      recordDeaths,
-      recordAssists,
-      recordDuration,
-    },
+    records,
   };
 
   if (aborted.aborted && aborted.pageNumber !== null) {

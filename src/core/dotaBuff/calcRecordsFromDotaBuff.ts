@@ -11,29 +11,30 @@ export function calcRecordsFromDotaBuff(arrayWithGames: IAllGames[]): IRecords {
   } = getRecords(arrayWithGames) as { [key: string]: IAllGames };
 
   return {
-    recordKills: {
+    "Most Kills": {
       value: gameWithRecordKills.kills,
       hero: gameWithRecordKills.hero,
-      heroAvatar: gameWithRecordKills.heroAvatar,
       matchUrl: gameWithRecordKills.matchUrl,
+      result: gameWithRecordKills.result,
     },
-    recordDeaths: {
+    "Most Deaths": {
       value: gameWithRecordDeaths.deaths,
       hero: gameWithRecordDeaths.hero,
-      heroAvatar: gameWithRecordDeaths.heroAvatar,
       matchUrl: gameWithRecordDeaths.matchUrl,
+      result: gameWithRecordDeaths.result,
     },
-    recordAssists: {
+    "Most Assists": {
       value: gameWithRecordAssists.assists,
       hero: gameWithRecordAssists.hero,
-      heroAvatar: gameWithRecordAssists.heroAvatar,
       matchUrl: gameWithRecordAssists.matchUrl,
+      result: gameWithRecordAssists.result,
     },
-    recordDuration: {
-      value: gameWithRecordDuration.duration,
+    "Longest Match": {
+      // todo: value считается не совсем правильно
+      value: `${(gameWithRecordDuration.duration / 60).toFixed(0)}+ minutes`,
       hero: gameWithRecordDuration.hero,
-      heroAvatar: gameWithRecordDuration.heroAvatar,
       matchUrl: gameWithRecordDuration.matchUrl,
+      result: gameWithRecordDuration.result,
     },
   };
 }
