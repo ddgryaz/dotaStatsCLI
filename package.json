@@ -7,7 +7,7 @@
   "scripts": {
     "build": "tsc",
     "start": "npm run build && node dist/main.js",
-    "dima": "npm run build && node dist/main.js 64015685 50",
+    "dima": "npm run build && node dist/main.js 64015685 200",
     "siva": "npm run build && node dist/main.js 73325963 50",
     "serj": "npm run build && node dist/main.js 73646633 50"
   },
@@ -21,6 +21,7 @@
     "typescript": "^5.3.2"
   },
   "dependencies": {
+    "@fastify/static": "^6.12.0",
     "fastify": "^4.24.3",
     "inquirer": "^8.2.6",
     "jsdom": "^23.0.1",

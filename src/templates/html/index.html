@@ -1,0 +1,254 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cabin:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/styles/index.css" />
+    <title>$APPNAME</title>
+  </head>
+  <body class="page">
+    <div class="wrapper">
+      <header></header>
+      <main class="content">
+        <section class="top-app">
+          <h1
+            data-wow-duration="2s"
+            class="top-app__title wow animate__animated animate__bounceInDown"
+          >
+            $APPNAME
+          </h1>
+          <h2
+            data-wow-duration="2s"
+            class="top-app__subtitle wow animate__animated animate__bounceInLeft"
+          >
+            $PROVIDER
+          </h2>
+          $ERROR_BLOCK
+          <h3
+            data-wow-duration="2s"
+            class="top-app__date wow animate__animated animate__bounceInRight"
+          >
+            Generation date: $DATETIME
+          </h3>
+        </section>
+        <section class="player">
+          <div class="container">
+            <div class="player__wrapper">
+              <div class="player__inner-top">
+                <h2
+                  class="player__title wow animate__animated animate__zoomInRight"
+                >
+                  Player:
+                </h2>
+                <h2
+                  class="player__title wow animate__animated animate__zoomInLeft"
+                >
+                  Records:
+                </h2>
+              </div>
+              <div class="player__inner">
+                <div
+                  class="player__profile wow animate__animated animate__zoomIn"
+                >
+                  <ul class="player__profile-list">
+                    <li>
+                      <div class="player__avatar">
+                        <img src="$AVATAR_URL" alt="" />
+                      </div>
+                    </li>
+                    <li>
+                      <h3 class="player__profile-name">$NICKNAME</h3>
+                    </li>
+                  </ul>
+                  <div class="player__statistics">
+                    <ul class="player__statistics-list">
+                      <li>
+                        <h3 class="player__statistics-title">Total Games</h3>
+                      </li>
+                      <li>
+                        <h3 class="player__statistics-subtitle">
+                          $PLAYER_TOTALGAMES
+                        </h3>
+                      </li>
+                    </ul>
+                    <ul class="player__statistics-list">
+                      <li>
+                        <h3 class="player__statistics-title">Win Count</h3>
+                      </li>
+                      <li>
+                        <h3 class="player__statistics-subtitle">$PLAYER_WIN</h3>
+                      </li>
+                    </ul>
+                    <ul class="player__statistics-list">
+                      <li>
+                        <h3 class="player__statistics-title">Lose Count</h3>
+                      </li>
+                      <li>
+                        <h3 class="player__statistics-subtitle">
+                          $PLAYER_LOSE
+                        </h3>
+                      </li>
+                    </ul>
+                    <ul class="player__statistics-list">
+                      <li>
+                        <h3 class="player__statistics-title">WinRate</h3>
+                      </li>
+                      <li>
+                        <h3 class="player__statistics-subtitle">
+                          $PLAYER_WINRATE
+                        </h3>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+                <div
+                  class="player__records wow animate__animated animate__zoomIn"
+                >
+                  <!--recordKills-->
+                  <a class="player__item" href="#">
+                    <div class="player__image-filter"></div>
+                    <img src="./images/dota.jpeg" alt="картинка" />
+                    <ul class="player__item-list">
+                      <li>
+                        <p class="record-value">Most Kills</p>
+                      </li>
+                      <li>
+                        <p class="record-number">45</p>
+                      </li>
+                      <li>
+                        <p class="record-value">Spectre (1:01:45)</p>
+                      </li>
+                      <li>
+                        <p class="record-text">2019-05-31</p>
+                      </li>
+                    </ul>
+                  </a>
+                  <!--recordDeaths-->
+                  <a class="player__item" href="#">
+                    <div class="player__image-filter"></div>
+                    <img src="./images/dota.jpeg" alt="картинка" />
+                    <ul class="player__item-list">
+                      <li>
+                        <p class="record-value">Most Kills</p>
+                      </li>
+                      <li>
+                        <p class="record-number">45</p>
+                      </li>
+                      <li>
+                        <p class="record-value">Spectre (1:01:45)</p>
+                      </li>
+                      <li>
+                        <p class="record-text">2019-05-31</p>
+                      </li>
+                    </ul>
+                  </a>
+                  <!--recordAssists-->
+                  <a class="player__item" href="#">
+                    <div class="player__image-filter"></div>
+                    <img src="./images/dota.jpeg" alt="картинка" />
+                    <ul class="player__item-list">
+                      <li>
+                        <p class="record-value">Most Kills</p>
+                      </li>
+                      <li>
+                        <p class="record-number">45</p>
+                      </li>
+                      <li>
+                        <p class="record-value">Spectre (1:01:45)</p>
+                      </li>
+                      <li>
+                        <p class="record-text">2019-05-31</p>
+                      </li>
+                    </ul>
+                  </a>
+                  <!--recordDuration-->
+                  <a class="player__item" href="#">
+                    <div class="player__image-filter"></div>
+                    <img src="./images/dota.jpeg" alt="картинка" />
+                    <ul class="player__item-list">
+                      <li>
+                        <p class="record-value">Most Kills</p>
+                      </li>
+                      <li>
+                        <p class="record-number">45</p>
+                      </li>
+                      <li>
+                        <p class="record-value">Spectre (1:01:45)</p>
+                      </li>
+                      <li>
+                        <p class="record-text">2019-05-31</p>
+                      </li>
+                    </ul>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+        <section class="statistics">
+          <div class="container">
+            <div class="statistics__wrapper">
+              <div
+                data-wow-duration="1.5s"
+                class="heroes wow animate__animated animate__zoomInLeft"
+              >
+                <h2 class="heroes__title">Heroes:</h2>
+                <table>
+                  <thead>
+                    <tr>
+                      <th>№</th>
+                      <th colspan="2">Hero</th>
+                      <th>Total Games</th>
+                      <th>WinRate</th>
+                      <th>WinRate %</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    $HEROES
+                  </tbody>
+                </table>
+              </div>
+              <div
+                data-wow-duration="1.5s"
+                class="heroes wow animate__animated animate__zoomInRight"
+              >
+                <h2 class="heroes__title">Items:</h2>
+                <table>
+                  <thead>
+                    <tr>
+                      <th>№</th>
+                      <th colspan="2">Item</th>
+                      <th>Total Games</th>
+                      <th>WinRate</th>
+                      <th>WinRate %</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    $ITEMS
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+      <footer class="footer">
+        <div class="container"></div>
+      </footer>
+    </div>
+    <script src="../js/wow.min.js"></script>
+    <script>
+      new WOW().init();
+    </script>
+  </body>
+</html>

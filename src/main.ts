@@ -11,6 +11,10 @@ import { openDotaApi } from "./core/openDota/openDotaAPI";
 import inquirer from "inquirer";
 import { APPLICATION_NAME } from "./constants/applicationName";
 import { ROUTER_NAME } from "./constants/routerName";
+import { fastifyStatic } from "@fastify/static";
+import { sleep } from "./utils/sleep";
+import { TIME_TO_CLOSE_APP } from "./constants/timeToCloseApp";
+import { getDateTime } from "./utils/getDateTime";
 
 const http = fastify();
 const [id, totalGames]: string[] = [process.argv[2], process.argv[3]];
@@ -95,53 +99,54 @@ async function main(): Promise<void> {
 
   logger.info("Creating a visualization.");
 
+  const dateTime: string = getDateTime();
+
+  http.register(fastifyStatic, {
+    root: path.join(__dirname, "..", "src", "templates", "styles"),
+    prefix: "/styles/",
+  });
+
+  http.get(FULL_ROUTER_NAME + "/styles/index.css", function (req, reply) {
+    reply.sendFile(
+      path.join(__dirname, "..", "src", "templates", "styles", "index.css"),
+    );
+  });
+
   http.get(FULL_ROUTER_NAME, async (request, reply) => {
     if (data) {
       const validHtml = await readFile(
-        path.join(__dirname, "..", "src", "templates", "index.html"),
+        path.join(__dirname, "..", "src", "templates", "html", "index.html"),
         { encoding: "utf-8" },
       );
 
       const arrayHeroesForTable: string[] =
         data.playerStats.mostPopularHeroes.map((hero, index) => {
           return `
-            <tr>
-              <th>${index + 1}.</th>
-              <th>
-              <img
-                src="${hero.avatar}"
-                alt=""
-                height="30px"
-                width="49px"
-                class="rectangle"
-              />
-              </th>
-              <th>${hero.hero}</th>
-              <th>${hero.totalGames}</th>
-              <th>${hero.winRate}</th>
-              <th>${hero["winRate%"]}</th>
-            </tr>`;
+          <tr>
+            <th>${index + 1}.</th>
+            <th class="table-image">
+              <img src="${hero.avatar}" alt="" />
+            </th>
+            <th>${hero.hero}</th>
+            <th>${hero.totalGames}</th>
+            <th>${hero.winRate}</th>
+            <th>${hero["winRate%"]}</th>
+          </tr>`;
         });
 
       const arrayItemsForTable: string[] =
         data.playerStats.mostPopularItems.map((item, index) => {
           return `
-            <tr>
+          <tr>
             <th>${index + 1}.</th>
-            <th>
-              <img
-                src="${item.avatar}"
-                alt=""
-                height="30px"
-                width="49px"
-                class="rectangle"
-              />
-              </th>
-              <th>${item.item}</th>
-              <th>${item.totalGames}</th>
-              <th>${item.winRate}</th>
-              <th>${item["winRate%"]}</th>
-            </tr>`;
+            <th class="table-image">
+              <img src="${item.avatar}" alt="" />
+            </th>
+            <th>${item.item}</th>
+            <th>${item.totalGames}</th>
+            <th>${item.winRate}</th>
+            <th>${item["winRate%"]}</th>
+          </tr>`;
         });
 
       const htmlBlockForProvider: string = `
@@ -152,6 +157,7 @@ async function main(): Promise<void> {
       let modifiedValidHtml = validHtml
         .replaceAll("$APPNAME", APPLICATION_NAME)
         .replace("$NICKNAME", data.playerName)
+        .replace("$DATETIME", dateTime)
         .replace("$PROVIDER", htmlBlockForProvider)
         .replace("$AVATAR_URL", data.avatarUrl)
         .replace("$PLAYER_TOTALGAMES", data.playerStats.totalGames.toString())
@@ -175,15 +181,21 @@ async function main(): Promise<void> {
 
       if (error) {
         const htmlBlockForError: string = `
-            <div class="saveDataError" style="display: flex; justify-content: center">
-                <blockquote>
+            <ul class="top-app__error">
+              <li>
+                <p class="top-app__error-text">
                   We were unable to obtain all the requested data. We received an error.
-                  <br />
-                  The error text is shown below.
-                  <br />
-                  <b>$ERROR_MESSAGE</b>
-                </blockquote>
-            </div>`.replace("$ERROR_MESSAGE", error);
+                </p>
+              </li>
+              <li>
+                <p class="top-app__error-text">The error text is shown below.</p>
+              </li>
+              <li>
+                <p class="top-app__error-title">
+                  $ERROR_MESSAGE
+                </p>
+              </li>
+            </ul>`.replace("$ERROR_MESSAGE", error);
 
         modifiedValidHtml = modifiedValidHtml.replace(
           "$ERROR_BLOCK",
@@ -218,6 +230,12 @@ async function main(): Promise<void> {
       reply.code(500).type("text/html; charset=utf-8").send(modifiedValidHtml);
     }
 
+    logger.info(
+      `Application will exit in ${
+        TIME_TO_CLOSE_APP / 1000
+      } seconds. See you soon!`,
+    );
+    await sleep(TIME_TO_CLOSE_APP);
     process.exit(0);
   });
 
