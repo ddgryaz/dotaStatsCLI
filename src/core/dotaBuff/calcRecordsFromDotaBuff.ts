@@ -1,22 +1,14 @@
 import { IAllGames } from "./types/IAllGames";
-import { IRecords } from "./types/IRecords";
+import { IRecords } from "../../types/IRecords";
+import { getRecords } from "../getRecords";
 
-export function getRecords(arrayWithGames: IAllGames[]): IRecords {
-  const gameWithRecordKills = arrayWithGames.reduce((acc, curr) =>
-    acc.kills > curr.kills ? acc : curr,
-  );
-
-  const gameWithRecordDeaths = arrayWithGames.reduce((acc, curr) =>
-    acc.deaths > curr.deaths ? acc : curr,
-  );
-
-  const gameWithRecordAssists = arrayWithGames.reduce((acc, curr) =>
-    acc.assists > curr.assists ? acc : curr,
-  );
-
-  const gameWithRecordDuration = arrayWithGames.reduce((acc, curr) =>
-    acc.duration > curr.duration ? acc : curr,
-  );
+export function calcRecordsFromDotaBuff(arrayWithGames: IAllGames[]): IRecords {
+  const {
+    gameWithRecordKills,
+    gameWithRecordDeaths,
+    gameWithRecordAssists,
+    gameWithRecordDuration,
+  } = getRecords(arrayWithGames) as { [key: string]: IAllGames };
 
   return {
     recordKills: {

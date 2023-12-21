@@ -1,5 +1,5 @@
 import { IPlayerStats } from "../core/dotaBuff/types/IPlayerStats";
-import {IRecords} from "../core/dotaBuff/types/IRecords";
+import {IRecords} from "./IRecords";
 
 export interface IProviderResult {
   playerName: string;

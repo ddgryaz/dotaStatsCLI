@@ -14,8 +14,8 @@ import { BanError } from "../../errors/banError";
 import { SaveDataError } from "../../errors/saveDataError";
 import { logger } from "../../utils/logger";
 import { ImpossibleGetDataError } from "../../errors/impossibleGetDataError";
-import { getRecords } from "./getRecords";
-import { IRecords } from "./types/IRecords";
+import { calcRecordsFromDotaBuff } from "./calcRecordsFromDotaBuff";
+import { IRecords } from "../../types/IRecords";
 
 const matchesEndpoint: string =
   "https://www.dotabuff.com/players/REQUIRED_ID/matches?enhance=overview&page=PAGE_NUMBER";
@@ -181,7 +181,7 @@ export async function parserDotaBuff(
   logger.info("Made a top list of your items.");
 
   const { recordKills, recordDeaths, recordAssists, recordDuration }: IRecords =
-    getRecords(allGames);
+    calcRecordsFromDotaBuff(allGames);
 
   logger.info(`Calculated your records for ${allGames.length} games.`);
 
