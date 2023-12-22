@@ -102,6 +102,11 @@ async function main(): Promise<void> {
 
   const dateTime: string = getDateTime();
 
+  /*
+   * Connecting common public directories for statics.
+   * For submitting to the main page and for submitting to the error page.
+   */
+
   http.register(fastifyStatic, {
     root: path.join(__dirname, "..", "src", "templates", "styles"),
     prefix: "/styles/",
@@ -126,6 +131,10 @@ async function main(): Promise<void> {
   });
 
   if (!data) {
+    /*
+     * Sending static for the error page.
+     */
+
     http.get(FULL_ROUTER_NAME + "/images/sadHero.png", function (req, reply) {
       reply.sendFile(
         path.join(__dirname, "..", "src", "templates", "images", "sadHero.png"),
@@ -135,6 +144,23 @@ async function main(): Promise<void> {
     http.get(FULL_ROUTER_NAME + "/images/bg.png", function (req, reply) {
       reply.sendFile(
         path.join(__dirname, "..", "src", "templates", "images", "bg.png"),
+      );
+    });
+  } else {
+    /*
+     * Connecting and sending a static js file for animations.
+     * Only used on the home page.
+     */
+
+    http.register(fastifyStatic, {
+      root: path.join(__dirname, "..", "src", "templates", "js"),
+      prefix: "/js/",
+      decorateReply: false,
+    });
+
+    http.get(FULL_ROUTER_NAME + "/js/wow.min.js", function (req, reply) {
+      reply.sendFile(
+        path.join(__dirname, "..", "src", "templates", "js", "wow.min.js"),
       );
     });
   }
