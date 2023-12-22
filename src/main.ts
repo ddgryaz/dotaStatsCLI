@@ -230,10 +230,7 @@ async function main(): Promise<void> {
           </tr>`;
         });
 
-      const htmlBlockForProvider: string = `
-            <div style="display: flex; justify-content: center">
-                <h4>Your data provider - ${provider?.name?.toUpperCase()}</h4>
-            </div>`;
+      const htmlBlockForProvider: string = `Your data provider - ${provider?.name?.toUpperCase()}`;
 
       let modifiedValidHtml = validHtml
         .replaceAll("$APPNAME", APPLICATION_NAME)
