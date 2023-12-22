@@ -122,12 +122,6 @@ async function main(): Promise<void> {
     );
   });
 
-  http.get(FULL_ROUTER_NAME + "/images/dotaBg.jpeg", function (req, reply) {
-    reply.sendFile(
-      path.join(__dirname, "..", "src", "templates", "images", "dotaBg.jpeg"),
-    );
-  });
-
   if (!data) {
     /*
      * Sending static for the error page.
@@ -146,7 +140,7 @@ async function main(): Promise<void> {
     });
   } else {
     /*
-     * Connecting and sending a static js file for animations.
+     * Connecting and sending a static js file for animations. Sending an image.
      * Only used on the home page.
      */
 
@@ -154,6 +148,12 @@ async function main(): Promise<void> {
       root: path.join(__dirname, "..", "src", "templates", "js"),
       prefix: "/js/",
       decorateReply: false,
+    });
+
+    http.get(FULL_ROUTER_NAME + "/images/dotaBg.jpeg", function (req, reply) {
+      reply.sendFile(
+        path.join(__dirname, "..", "src", "templates", "images", "dotaBg.jpeg"),
+      );
     });
 
     http.get(FULL_ROUTER_NAME + "/js/wow.min.js", function (req, reply) {
