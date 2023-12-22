@@ -1,6 +1,7 @@
 import { IAllGames } from "./types/IAllGames";
 import { IRecords } from "../../types/IRecords";
 import { getRecords } from "../getRecords";
+import { getTimeFromSeconds } from "../../utils/getTimeFromSeconds";
 
 export function calcRecordsFromDotaBuff(arrayWithGames: IAllGames[]): IRecords {
   const {
@@ -30,8 +31,7 @@ export function calcRecordsFromDotaBuff(arrayWithGames: IAllGames[]): IRecords {
       result: gameWithRecordAssists.result,
     },
     "Longest Match": {
-      // todo: value считается не совсем правильно
-      value: `${(gameWithRecordDuration.duration / 60).toFixed(0)}+ minutes`,
+      value: getTimeFromSeconds(gameWithRecordDuration.duration),
       hero: gameWithRecordDuration.hero,
       matchUrl: gameWithRecordDuration.matchUrl,
       result: gameWithRecordDuration.result,

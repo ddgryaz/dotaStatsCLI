@@ -5,18 +5,9 @@ export function getDateTime(): string {
   const month = ("0" + (dateObject.getMonth() + 1)).slice(-2);
   const year = dateObject.getFullYear();
 
-  const hours =
-    dateObject.getHours() <= 9
-      ? "0" + dateObject.getHours()
-      : dateObject.getHours();
-  const minutes =
-    dateObject.getMinutes() <= 9
-      ? "0" + dateObject.getMinutes()
-      : dateObject.getMinutes();
-  const seconds =
-    dateObject.getSeconds() <= 9
-      ? "0" + dateObject.getSeconds()
-      : dateObject.getSeconds();
+  const hours = dateObject.getHours().toString().padStart(2, "0");
+  const minutes = dateObject.getMinutes().toString().padStart(2, "0");
+  const seconds = dateObject.getSeconds().toString().padStart(2, "0");
 
   return `${year}-${month}-${date} ${hours}:${minutes}:${seconds}`;
 }
