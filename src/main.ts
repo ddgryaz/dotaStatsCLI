@@ -16,6 +16,7 @@ import { sleep } from "./utils/sleep";
 import { TIME_TO_CLOSE_APP } from "./constants/timeToCloseApp";
 import { getDateTime } from "./utils/getDateTime";
 import { IRecord } from "./types/IRecords";
+import { checkNetworkConnection } from "./utils/checkNetworkConnection";
 
 const http = fastify();
 const [id, totalGames]: string[] = [process.argv[2], process.argv[3]];
@@ -25,7 +26,6 @@ const PORT: number = 6781;
 /*
  * todo:
  *  Добавить подсказку к выбору провайдер (рекомендовано).
- *  Обработать ошибку при отсутствии интернет соединения.
  *
  * todo:
  *  Добавление рекордов по собранным играм, c предоставлением ссылки на dotabuff, например так (https://www.dotabuff.com/players/64015685/records),
@@ -84,6 +84,7 @@ async function main(): Promise<void> {
   logger.info("Start of data collection...");
 
   try {
+    await checkNetworkConnection();
     data = await service(Number(id), Number(totalGames));
     error = null;
   } catch (e) {
