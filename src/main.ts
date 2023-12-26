@@ -100,17 +100,37 @@ async function main(): Promise<void> {
      * Sending static for the error page.
      */
 
-    http.get(FULL_ROUTER_NAME + "/images/sadHero.png", function (req, reply) {
-      reply.sendFile(
-        path.join(__dirname, "..", "src", "templates", "images", "sadHero.png"),
-      );
-    });
+    http.get(
+      FULL_ROUTER_NAME + "/images/errorImage.png",
+      function (req, reply) {
+        reply.sendFile(
+          path.join(
+            __dirname,
+            "..",
+            "src",
+            "templates",
+            "images",
+            "errorImage.png",
+          ),
+        );
+      },
+    );
 
-    http.get(FULL_ROUTER_NAME + "/images/bg.png", function (req, reply) {
-      reply.sendFile(
-        path.join(__dirname, "..", "src", "templates", "images", "bg.png"),
-      );
-    });
+    http.get(
+      FULL_ROUTER_NAME + "/images/backgroundError.jpg",
+      function (req, reply) {
+        reply.sendFile(
+          path.join(
+            __dirname,
+            "..",
+            "src",
+            "templates",
+            "images",
+            "backgroundError.jpg",
+          ),
+        );
+      },
+    );
   } else {
     /*
      * Connecting and sending a static js file for animations. Sending an image.
@@ -123,11 +143,21 @@ async function main(): Promise<void> {
       decorateReply: false,
     });
 
-    http.get(FULL_ROUTER_NAME + "/images/dotaBg.jpeg", function (req, reply) {
-      reply.sendFile(
-        path.join(__dirname, "..", "src", "templates", "images", "dotaBg.jpeg"),
-      );
-    });
+    http.get(
+      FULL_ROUTER_NAME + "/images/backgroundRecords.jpg",
+      function (req, reply) {
+        reply.sendFile(
+          path.join(
+            __dirname,
+            "..",
+            "src",
+            "templates",
+            "images",
+            "backgroundRecords.jpg",
+          ),
+        );
+      },
+    );
 
     http.get(FULL_ROUTER_NAME + "/js/wow.min.js", function (req, reply) {
       reply.sendFile(
@@ -150,7 +180,7 @@ async function main(): Promise<void> {
           return `
           <a class="player__item" href="${value.matchUrl}" target="_blank">
             <div class="player__image-filter"></div>
-            <img src="/images/dotaBg.jpeg" alt="" />
+            <img src="/images/backgroundRecords.jpg" alt="" />
             <ul class="player__item-list">
               <li>
                 <p class="record-value">${key}</p>

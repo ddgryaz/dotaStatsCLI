@@ -2,7 +2,7 @@
   display: flex;
   justify-content: center;
   height: 100vh;
-  background: url(/images/bg.png);
+  background: url(/images/backgroundError.jpg);
 }
 .error__inner {
   margin: 80px auto 0;
