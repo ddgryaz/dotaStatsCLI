@@ -133,15 +133,8 @@ async function main(): Promise<void> {
     );
   } else {
     /*
-     * Connecting and sending a static js file for animations. Sending an image.
-     * Only used on the home page.
+     * Sending an image. Only used on the home page.
      */
-
-    http.register(fastifyStatic, {
-      root: path.join(__dirname, "..", "src", "templates", "js"),
-      prefix: "/js/",
-      decorateReply: false,
-    });
 
     http.get(
       FULL_ROUTER_NAME + "/images/backgroundRecords.jpg",
@@ -158,12 +151,6 @@ async function main(): Promise<void> {
         );
       },
     );
-
-    http.get(FULL_ROUTER_NAME + "/js/wow.min.js", function (req, reply) {
-      reply.sendFile(
-        path.join(__dirname, "..", "src", "templates", "js", "wow.min.js"),
-      );
-    });
   }
 
   http.get(FULL_ROUTER_NAME, async (request, reply) => {

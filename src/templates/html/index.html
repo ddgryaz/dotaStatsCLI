@@ -3,10 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
-    />
+    <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -22,21 +19,24 @@
       <main class="content">
         <section class="top-app">
           <h1
-            data-wow-duration="2s"
-            class="top-app__title wow animate__animated animate__bounceInDown"
+            class="top-app__title"
+            data-aos="fade-down"
+            data-aos-duration="2000"
           >
             $APPNAME
           </h1>
           <h2
-            data-wow-duration="2s"
-            class="top-app__subtitle wow animate__animated animate__bounceInLeft"
+            class="top-app__subtitle"
+            data-aos="fade-left"
+            data-aos-duration="2000"
           >
             $PROVIDER
           </h2>
           $ERROR_BLOCK
           <h3
-            data-wow-duration="2s"
-            class="top-app__date wow animate__animated animate__bounceInRight"
+            class="top-app__date"
+            data-aos="fade-right"
+            data-aos-duration="2000"
           >
             Generation date: $DATETIME
           </h3>
@@ -45,21 +45,13 @@
           <div class="container">
             <div class="player__wrapper">
               <div class="player__inner-top">
-                <h2
-                  class="player__title wow animate__animated animate__zoomInRight"
-                >
-                  Player:
-                </h2>
-                <h2
-                  class="player__title wow animate__animated animate__zoomInLeft"
-                >
+                <h2 class="player__title" data-aos="zoom-out-right">Player:</h2>
+                <h2 class="player__title" data-aos="zoom-out-right">
                   Records:
                 </h2>
               </div>
               <div class="player__inner">
-                <div
-                  class="player__profile wow animate__animated animate__zoomIn"
-                >
+                <div class="player__profile" data-aos="zoom-out-down">
                   <ul class="player__profile-list">
                     <li>
                       <div class="player__avatar">
@@ -111,9 +103,7 @@
                     </ul>
                   </div>
                 </div>
-                <div
-                  class="player__records wow animate__animated animate__zoomIn"
-                >
+                <div class="player__records" data-aos="zoom-out-down">
                   $RECORDS
                 </div>
               </div>
@@ -124,8 +114,9 @@
           <div class="container">
             <div class="statistics__wrapper">
               <div
-                data-wow-duration="1.5s"
-                class="heroes wow animate__animated animate__zoomInLeft"
+                class="heroes"
+                data-aos="flip-up"
+                data-aos-duration="1500"
               >
                 <h2 class="heroes__title">Heroes:</h2>
                 <table>
@@ -144,8 +135,9 @@
                 </table>
               </div>
               <div
-                data-wow-duration="1.5s"
-                class="heroes wow animate__animated animate__zoomInRight"
+                class="heroes"
+                data-aos="flip-down"
+                data-aos-duration="1500"
               >
                 <h2 class="heroes__title">Items:</h2>
                 <table>
@@ -195,9 +187,9 @@
         </div>
       </footer>
     </div>
-    <script src="/js/wow.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
     <script>
-      new WOW().init();
+      AOS.init();
     </script>
   </body>
 </html>
