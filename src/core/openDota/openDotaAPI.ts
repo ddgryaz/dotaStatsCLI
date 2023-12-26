@@ -11,6 +11,8 @@ import { logger } from "../../utils/logger";
 import { IAllMatches } from "./types/IAllMatches";
 import { sortByPopularityNumbers } from "./sortByPopularityNumbers";
 import { finalSortToTables } from "../../utils/finalSortToTables";
+import { IRecords } from "../../types/IRecords";
+import { calcRecordsFromOpenDota } from "./calcRecordsFromOpenDota";
 
 const providerHost = "https://api.opendota.com";
 const playerEndpoint = `${providerHost}/api/players/REQUIRED_ID`;
@@ -75,6 +77,13 @@ export async function openDotaApi(
   const mostPopularHeroes: IMostPopular[] = [];
 
   logger.info("Matches won, popular heroes and items calculated.");
+
+  const records: IRecords = await calcRecordsFromOpenDota(
+    matches,
+    heroesInfoEndpoint,
+  );
+
+  logger.info(`Calculated your records for ${matches.length} games.`);
 
   for (let i: number = 0; i < TOTAL_TOP; i++) {
     const coincidencesHero = sortByPopularityNumbers(allHeroesIds).filter(
@@ -144,11 +153,12 @@ export async function openDotaApi(
     mostPopularHeroes,
     mostPopularItems,
   };
-  // @ts-ignore todo: remove
+
   return {
     playerName,
     avatarUrl,
     playerStats,
     TOTAL_TOP,
+    records,
   };
 }

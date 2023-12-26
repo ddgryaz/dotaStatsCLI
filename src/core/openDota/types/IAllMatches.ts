@@ -7,4 +7,5 @@ export interface IAllMatches {
   assists: number;
   deaths: number;
   duration: number; // in seconds
+  hero_name?: string;
 }
