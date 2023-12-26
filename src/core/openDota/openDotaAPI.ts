@@ -10,7 +10,7 @@ import { IProviderResult } from "../../types/IProviderResult";
 import { logger } from "../../utils/logger";
 import { IAllMatches } from "./types/IAllMatches";
 import { sortByPopularityNumbers } from "./sortByPopularityNumbers";
-import {finalSortToTables} from "../../utils/finalSortToTables";
+import { finalSortToTables } from "../../utils/finalSortToTables";
 
 const providerHost = "https://api.opendota.com";
 const playerEndpoint = `${providerHost}/api/players/REQUIRED_ID`;
@@ -130,8 +130,8 @@ export async function openDotaApi(
     });
   }
 
-  finalSortToTables(mostPopularHeroes)
-  finalSortToTables(mostPopularItems)
+  finalSortToTables(mostPopularHeroes);
+  finalSortToTables(mostPopularItems);
 
   logger.info("A rating of items and heroes has been formed.");
 
@@ -144,7 +144,7 @@ export async function openDotaApi(
     mostPopularHeroes,
     mostPopularItems,
   };
-  // @ts-ignore
+  // @ts-ignore todo: remove
   return {
     playerName,
     avatarUrl,
