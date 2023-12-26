@@ -45,8 +45,6 @@ export async function openDotaApi(
     `Data collected - ${matches.length} games. Running data aggregation.`,
   );
 
-  // todo: выкинуть предупреждение, что мы собрали все доступные игры
-
   const TOTAL_TOP = getTopCount(matches.length);
 
   const winMatches = matches.filter((match) => match.result === "Won Match");
