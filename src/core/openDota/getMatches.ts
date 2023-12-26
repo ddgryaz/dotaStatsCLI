@@ -42,11 +42,11 @@ export async function getMatches(
         if (side === "radiant") {
           return "Won Match";
         } else {
-          return "Lose Match";
+          return "Lost Match";
         }
       case false:
         if (side === "radiant") {
-          return "Lose Match";
+          return "Lost Match";
         } else {
           return "Won Match";
         }
