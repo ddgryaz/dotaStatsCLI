@@ -168,7 +168,6 @@ export async function parserDotaBuff(
 
   logger.info("Made a top list of your heroes.");
 
-  // todo: здесь очень долго
   const mostPopularItemsWithoutStats: IAllArray[] = sortByPopularity(allItems)
     .reduce((acc: IAllArray[], curr) => {
       if (!acc.find((v) => v.name === curr.name)) {
@@ -233,6 +232,20 @@ export async function parserDotaBuff(
         "%",
     });
   }
+
+  mostPopularHeroes.sort((a: IMostPopular, b: IMostPopular) => {
+    return (
+      Number(b.totalGames.split("/")[0]) - Number(a.totalGames.split("/")[0]) ||
+      parseFloat(b["winRate%"]) - parseFloat(a["winRate%"])
+    );
+  });
+
+  mostPopularItems.sort((a: IMostPopular, b: IMostPopular) => {
+    return (
+      Number(b.totalGames.split("/")[0]) - Number(a.totalGames.split("/")[0]) ||
+      parseFloat(b["winRate%"]) - parseFloat(a["winRate%"])
+    );
+  });
 
   const playerStats: IPlayerStats = {
     totalGames: allGames.length,

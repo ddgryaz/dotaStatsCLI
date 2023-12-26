@@ -1,30 +1,31 @@
 import { IAllArray } from "../core/dotaBuff/types/IAllArray";
 
-export function sortByPopularity<Type>(array: Type[]): Type[] {
-  if (typeof array[0] !== "number") {
-    // todo: здесь баг, смотри в result.json 623 str
-    return array
-      .sort(
-        (a, b) =>
-          array.filter(
-            (v): boolean => (v as IAllArray).name === (a as IAllArray).name,
-          ).length -
-          array.filter(
-            (v): boolean => (v as IAllArray).name === (b as IAllArray).name,
-          ).length,
-      )
-      .reverse();
-  } else {
-    // todo: или здесь баг, я хз
-    return array
-      .sort((a, b) => {
-        return (a as number) - (b as number);
-      })
-      .sort(
-        (a, b) =>
-          array.filter((v): boolean => v === a).length -
-          array.filter((v): boolean => v === b).length,
-      )
-      .reverse();
+export function sortByPopularity(array: IAllArray[]): IAllArray[] {
+  const countHeroMatches = Object.create(null);
+
+  for (let i = 0; i < array.length; ++i) {
+    countHeroMatches[array[i].name] = ~~countHeroMatches[array[i].name] + 1;
   }
+
+  return array.sort(function (x, y) {
+    return (
+      countHeroMatches[y.name] - countHeroMatches[x.name] ||
+      x.name.localeCompare(y.name)
+    );
+  });
+  // if (typeof array[0] !== "number") {
+  //
+  // } else {
+  // todo: или здесь баг, я хз
+  // return array
+  //   .sort((a, b) => {
+  //     return (a as number) - (b as number);
+  //   })
+  //   .sort(
+  //     (a, b) =>
+  //       array.filter((v): boolean => v === a).length -
+  //       array.filter((v): boolean => v === b).length,
+  //   )
+  //   .reverse();
+  // }
 }
