@@ -26,29 +26,6 @@ const PORT: number = 6781;
 /*
  * todo:
  *  Добавить подсказку к выбору провайдер (рекомендовано).
- *
- * todo:
- *  Добавление рекордов по собранным играм, c предоставлением ссылки на dotabuff, например так (https://www.dotabuff.com/players/64015685/records),
- *  дефолтный объект с open-dota (без ?project) содержит такие данные:
- *  {
- *		"match_id": 7385509323,
- *		"player_slot": 1,
- *		"radiant_win": false,
- *		"duration": 2610, | Самая длительная игра в секундах
- *		"game_mode": 22,
- *		"lobby_type": 7,
- *		"hero_id": 126, | Здесь взять avatar героя
- *		"start_time": 1697492360,
- *		"version": null,
- *		"kills": 11, | Больше всего убийств
- *		"deaths": 6, | Больше всего смертей
- *		"assists": 6, | Больше всего ассистов
- *		"skill": null,
- *		"average_rank": 34,
- *		"leaver_status": 0,
- *		"party_size": null
- *	 }
- *
  */
 
 const providers = [
