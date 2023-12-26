@@ -1,6 +1,5 @@
 import { JSDOM } from "jsdom";
 import { IAllGames } from "./types/IAllGames";
-import { sortByPopularity } from "../../utils/sortByPopularity";
 import { IMostPopular } from "./types/IMostPopular";
 import { IPlayerStats } from "./types/IPlayerStats";
 import { IProviderResult } from "../../types/IProviderResult";
@@ -16,6 +15,8 @@ import { logger } from "../../utils/logger";
 import { ImpossibleGetDataError } from "../../errors/impossibleGetDataError";
 import { calcRecordsFromDotaBuff } from "./calcRecordsFromDotaBuff";
 import { IRecords } from "../../types/IRecords";
+import { sortByPopularityObjects } from "./sortByPopularityObjects";
+import { finalSortToTables } from "../../utils/finalSortToTables";
 
 const matchesEndpoint: string =
   "https://www.dotabuff.com/players/REQUIRED_ID/matches?enhance=overview&page=PAGE_NUMBER";
@@ -157,7 +158,9 @@ export async function parserDotaBuff(
 
   logger.info("Found all the heroes.");
 
-  const mostPopularHeroesWithoutStats: IAllArray[] = sortByPopularity(allHeroes)
+  const mostPopularHeroesWithoutStats: IAllArray[] = sortByPopularityObjects(
+    allHeroes,
+  )
     .reduce((acc: IAllArray[], curr) => {
       if (!acc.find((v) => v.name === curr.name)) {
         acc.push(curr);
@@ -168,7 +171,9 @@ export async function parserDotaBuff(
 
   logger.info("Made a top list of your heroes.");
 
-  const mostPopularItemsWithoutStats: IAllArray[] = sortByPopularity(allItems)
+  const mostPopularItemsWithoutStats: IAllArray[] = sortByPopularityObjects(
+    allItems,
+  )
     .reduce((acc: IAllArray[], curr) => {
       if (!acc.find((v) => v.name === curr.name)) {
         acc.push(curr);
@@ -187,7 +192,9 @@ export async function parserDotaBuff(
   const mostPopularHeroes: IMostPopular[] = [];
 
   for (let i: number = 0; i < TOTAL_TOP; i++) {
-    const coincidencesHero: IAllArray[] = sortByPopularity(allHeroes).filter(
+    const coincidencesHero: IAllArray[] = sortByPopularityObjects(
+      allHeroes,
+    ).filter(
       (el: IAllArray): boolean =>
         el.name === mostPopularHeroesWithoutStats[i].name,
     );
@@ -197,7 +204,9 @@ export async function parserDotaBuff(
         el.hero === mostPopularHeroesWithoutStats[i].name,
     );
 
-    const coincidencesItem: IAllArray[] = sortByPopularity(allItems).filter(
+    const coincidencesItem: IAllArray[] = sortByPopularityObjects(
+      allItems,
+    ).filter(
       (el: IAllArray): boolean =>
         el.name === mostPopularItemsWithoutStats[i].name,
     );
@@ -233,19 +242,8 @@ export async function parserDotaBuff(
     });
   }
 
-  mostPopularHeroes.sort((a: IMostPopular, b: IMostPopular) => {
-    return (
-      Number(b.totalGames.split("/")[0]) - Number(a.totalGames.split("/")[0]) ||
-      parseFloat(b["winRate%"]) - parseFloat(a["winRate%"])
-    );
-  });
-
-  mostPopularItems.sort((a: IMostPopular, b: IMostPopular) => {
-    return (
-      Number(b.totalGames.split("/")[0]) - Number(a.totalGames.split("/")[0]) ||
-      parseFloat(b["winRate%"]) - parseFloat(a["winRate%"])
-    );
-  });
+  finalSortToTables(mostPopularHeroes);
+  finalSortToTables(mostPopularItems);
 
   const playerStats: IPlayerStats = {
     totalGames: allGames.length,

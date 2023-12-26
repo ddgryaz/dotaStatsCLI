@@ -1,9 +1,7 @@
-//@ts-nocheck //todo: remove
 import { BaseError } from "../../errors/baseError";
 import { getNameAndAvatar } from "./getNameAndAvatar";
 import { getMatches } from "./getMatches";
 import { getTopCount } from "../getTopCount";
-import { sortByPopularity } from "../../utils/sortByPopularity";
 import { IMostPopular } from "../dotaBuff/types/IMostPopular";
 import { getImageAndNameIOrH } from "./getImageAndNameIOrH";
 import { IPlayerStats } from "../dotaBuff/types/IPlayerStats";
@@ -11,6 +9,8 @@ import { sleep } from "../../utils/sleep";
 import { IProviderResult } from "../../types/IProviderResult";
 import { logger } from "../../utils/logger";
 import { IAllMatches } from "./types/IAllMatches";
+import { sortByPopularityNumbers } from "./sortByPopularityNumbers";
+import {finalSortToTables} from "../../utils/finalSortToTables";
 
 const providerHost = "https://api.opendota.com";
 const playerEndpoint = `${providerHost}/api/players/REQUIRED_ID`;
@@ -64,11 +64,11 @@ export async function openDotaApi(
     .filter((item) => item !== 0);
 
   const mostPopularHeroIdsWithoutStats = Array.from(
-    new Set(sortByPopularity(allHeroesIds)),
+    new Set(sortByPopularityNumbers(allHeroesIds)),
   ).slice(0, TOTAL_TOP);
 
   const mostPopularItemIdsWithoutStats = Array.from(
-    new Set(sortByPopularity(allItemsIds)),
+    new Set(sortByPopularityNumbers(allItemsIds)),
   ).slice(0, TOTAL_TOP);
 
   const mostPopularItems: IMostPopular[] = [];
@@ -77,7 +77,7 @@ export async function openDotaApi(
   logger.info("Matches won, popular heroes and items calculated.");
 
   for (let i: number = 0; i < TOTAL_TOP; i++) {
-    const coincidencesHero = sortByPopularity(allHeroesIds).filter(
+    const coincidencesHero = sortByPopularityNumbers(allHeroesIds).filter(
       (heroId) => heroId === mostPopularHeroIdsWithoutStats[i],
     );
 
@@ -85,7 +85,7 @@ export async function openDotaApi(
       (match) => match.hero_id === mostPopularHeroIdsWithoutStats[i],
     );
 
-    const coincidencesItem = sortByPopularity(allItemsIds).filter(
+    const coincidencesItem = sortByPopularityNumbers(allItemsIds).filter(
       (itemId) => itemId === mostPopularItemIdsWithoutStats[i],
     );
 
@@ -130,6 +130,9 @@ export async function openDotaApi(
     });
   }
 
+  finalSortToTables(mostPopularHeroes)
+  finalSortToTables(mostPopularItems)
+
   logger.info("A rating of items and heroes has been formed.");
 
   const playerStats: IPlayerStats = {
@@ -141,7 +144,7 @@ export async function openDotaApi(
     mostPopularHeroes,
     mostPopularItems,
   };
-
+  // @ts-ignore
   return {
     playerName,
     avatarUrl,
