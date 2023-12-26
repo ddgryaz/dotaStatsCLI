@@ -375,7 +375,18 @@ thead {
 }
 .footer__copyright {
   color: #fff;
-  font-size: 10px;
+  font-size: 15px;
   margin-left: auto;
   opacity: 0.5;
+}
+
+.footer__link {
+  cursor: pointer;
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+}
+
+.footer__link p {
+  margin-left: 5px;
 }
