@@ -41,8 +41,6 @@ export async function openDotaApi(
     matchesEndpoint,
   );
 
-  // todo: выкинуть предупреждение, что мы собрали все доступные игры
-
   logger.info(
     `Data collected - ${matches.length} games. Running data aggregation.`,
   );
