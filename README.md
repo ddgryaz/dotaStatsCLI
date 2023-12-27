@@ -72,7 +72,7 @@ they look great in your game records section!
 > (which we use as data providers) - www.dotabuff.com or www.opendota.com. 
 > When you find a player by nickname or game and go to his profile, 
 > the address bar will have the following address: “PROVIDER.com/players/XXX/”, 
-> where XXX is the PLAYER ID
+> where XXX is the PLAYER ID.
 
 * Why is the data from different providers different, despite the same number of game matches?  
 
@@ -90,7 +90,7 @@ they look great in your game records section!
 * By what principle are the statistics tables sorted?
 
 > The data is sorted by the number of games played (column - "Total Games"), 
-> the second criterion for sorting is the percentage of wins (column - "WinRate %")
+> the second criterion for sorting is the percentage of wins (column - "WinRate %").
 
 * For some items in the rating, instead of a name and image, “no data” is written. Is this a bug?  
 
