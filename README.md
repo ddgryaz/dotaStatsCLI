@@ -65,6 +65,15 @@ they look great in your game records section!
 
 ### FAQ
 
+* How can I find out my PLAYER ID?
+
+> At the moment, we do not know of any convenient ways to obtain a PLAYER ID. 
+> You can find it out by searching on popular data aggregator sites 
+> (which we use as data providers) - www.dotabuff.com or www.opendota.com. 
+> When you find a player by nickname or game and go to his profile, 
+> the address bar will have the following address: “PROVIDER.com/players/XXX/”, 
+> where XXX is the PLAYER ID
+
 * Why is the data from different providers different, despite the same number of game matches?  
 
 > Indeed, the data may vary, usually it is a small difference. 
