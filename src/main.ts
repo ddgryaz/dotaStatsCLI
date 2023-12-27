@@ -17,6 +17,7 @@ import { TIME_TO_CLOSE_APP } from "./constants/timeToCloseApp";
 import { getDateTime } from "./utils/getDateTime";
 import { IRecord } from "./types/IRecords";
 import { checkNetworkConnection } from "./utils/checkNetworkConnection";
+import { INTRODUCTION_TEXT } from "./constants/introductionText";
 
 const http = fastify();
 const [id, totalGames]: string[] = [process.argv[2], process.argv[3]];
@@ -35,6 +36,8 @@ const providers = [
 ];
 
 async function main(): Promise<void> {
+  console.log(INTRODUCTION_TEXT);
+
   const { service } = await inquirer.prompt([
     {
       type: "list",
