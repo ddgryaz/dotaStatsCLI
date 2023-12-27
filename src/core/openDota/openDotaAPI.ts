@@ -13,6 +13,7 @@ import { sortByPopularityNumbers } from "./sortByPopularityNumbers";
 import { finalSortToTables } from "../../utils/finalSortToTables";
 import { IRecords } from "../../types/IRecords";
 import { calcRecordsFromOpenDota } from "./calcRecordsFromOpenDota";
+import { ImpossibleGetDataError } from "../../errors/impossibleGetDataError";
 
 const providerHost = "https://api.opendota.com";
 const playerEndpoint = `${providerHost}/api/players/REQUIRED_ID`;
@@ -40,6 +41,12 @@ export async function openDotaApi(
     gamesCount,
     matchesEndpoint,
   );
+
+  if (!matches.length) {
+    throw new ImpossibleGetDataError(
+      "Error: Player profile is private or does not exist.",
+    );
+  }
 
   logger.info(
     `Data collected - ${matches.length} games. Running data aggregation.`,
