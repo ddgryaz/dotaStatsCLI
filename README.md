@@ -24,8 +24,7 @@ general information.
 ### Table of Contents
 
 - [How it works?](#how-it-works)
-- [Quick start](#quick-start)
-- [Install](#install)
+- [Quick start and install](#quick-start-and-install)
 - [Customization](#customization)
 - [FAQ](#FAQ)
 - [License](#license)
@@ -51,9 +50,7 @@ In the second case, the data will be collected from the provider using query API
 After collecting the data and all the necessary calculations, 
 an HTML page will be generated, which will open in your default browser.
 
-### Quick start
-
-### Install
+### Quick start and install
 
 ### Customization
 
@@ -74,6 +71,17 @@ they look great in your game records section!
 > This is because providers define certain game outcomes differently, 
 > such as games that did not start because one of the players 
 > failed to load or where one of the players left the game.
+
+* What determines the number of heroes or items in statistics tables?
+
+> The number of rows in statistics tables is a dynamic variable. 
+> If you requested 200+ game matches for analysis, 
+> then there will be 10 lines, otherwise 5.
+
+* By what principle are the statistics tables sorted?
+
+> The data is sorted by the number of games played (column - "Total Games"), 
+> the second criterion for sorting is the percentage of wins (column - "WinRate %")
 
 * For some items in the rating, instead of a name and image, “no data” is written. Is this a bug?  
 
