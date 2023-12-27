@@ -26,7 +26,6 @@ general information.
 - [How it works?](#how-it-works)
 - [Quick start](#quick-start)
 - [Install](#install)
-- [Example](#example)
 - [Customization](#customization)
 - [FAQ](#FAQ)
 - [License](#license)
@@ -37,7 +36,8 @@ The application takes two arguments. The first is the player ID, the second is
 the number of games that need to be analyzed.  
 
 Next, the application will ask you to select a game data provider.
-There are two data providers available in version 1.0.0.
+There are two data providers available in version 1.0.0.  
+
 Choose dotaBuff provider if you want to get fast visualization for a small number of 
 games (50-500 matches).  
 
@@ -55,8 +55,6 @@ an HTML page will be generated, which will open in your default browser.
 
 ### Install
 
-### Example
-
 ### Customization
 
 In the release version of the application, stock images were used, which are freely
@@ -69,6 +67,35 @@ a look at the images from here - [Dota 2 Wallpapers](https://www.wallpaperflare.
 they look great in your game records section!
 
 ### FAQ
+
+* Why is the data from different providers different, despite the same number of game matches?  
+
+> Indeed, the data may vary, usually it is a small difference. 
+> This is because providers define certain game outcomes differently, 
+> such as games that did not start because one of the players 
+> failed to load or where one of the players left the game.
+
+* For some items in the rating, instead of a name and image, “no data” is written. Is this a bug?  
+
+> If you are using the openDota supplier, then this is a normal situation
+> that will soon be corrected on the supplier's side. 
+> This is usually due to a delay in updating data for new items or heroes.
+
+* How is animation implemented on the statistics page?
+
+> The animation is implemented using a small 
+> and wonderful open source library - [AOS - Animate on scroll library](https://github.com/michalsnik/aos).
+
+* Can I participate in the development of the project?
+
+> Yes! DotaStatsCLI is an open source application. 
+> The application was born as a hobby. If you want to help in development, 
+> fix bugs or make any contribution, we will be happy to wait for PR.
+
+* Where can I report a bug in the application?
+
+> You can report a bug or ask a question related to the application
+> on the GitHub page in a special tab - [DotaStatsCLI-issues](https://github.com/ddgryaz/dotaStatsCLI/issues).
 
 ### License
 
