@@ -9,12 +9,11 @@
 </div>
 
 <br />
+
 Do popular gaming stats providers limit your high scores and stats to game modes?
 Are you satisfied with receiving information exclusively for your entire gaming career?
 Are you ready to use paid features from providers to get what you need in an
-overloaded interface?
-
-<br />
+overloaded interface?  
 
 DotaStatsCLI - Simple, free and effective CLI application that allows you to receive
 statistics of your matches in dota and visualize it in a pleasant and understandable way.
