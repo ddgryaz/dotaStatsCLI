@@ -52,6 +52,25 @@ an HTML page will be generated, which will open in your default browser.
 
 ### Quick start and install
 
+The easiest and best way to install DotaStatsCLI - is to use [NPM](https://docs.npmjs.com/about-npm).
+
+> **DotaStatsCLI is not a library! Is a standalone CLI application, please install globally!**
+
+```sh
+npm install -g dotastatscli
+```
+
+Use the app with two required arguments, PLAYER_ID and GAMES_COUNT, like this:
+
+```sh
+dotastatscli 321580662 500
+```
+
+This ID belongs to a professional Dota player. 
+After all the calculations have been made, the visualization will open in your browser.  
+
+
+
 ### Customization
 
 In the release version of the application, stock images were used, which are freely
