@@ -8,6 +8,13 @@
     </a>
 </div>
 
+<div align="center">
+
+[![npm-version](https://img.shields.io/npm/v/dotastatscli?color=%2335b18e)](https://www.npmjs.com/package/dotastatscli)
+[![license](https://img.shields.io/npm/l/dotastatscli?color=blue)](https://github.com/ddgryaz/dotaStatsCLI?#LICENSE)
+
+</div>
+
 <br />
 
 Do popular gaming stats providers limit your high scores and stats to game modes?
