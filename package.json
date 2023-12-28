@@ -9,7 +9,8 @@
   "scripts": {
     "build": "tsc",
     "start": "node dist/main.js",
-    "devStart": "npm run build && node dist/main.js"
+    "devStart": "npm run build && node dist/main.js",
+    "prepublishOnly": "tsc"
   },
   "engines": {
     "node": ">=18.14.0"
@@ -17,6 +18,10 @@
   "bin": {
     "dotastatscli": "dist/main.js"
   },
+  "files": [
+    "dist/**/*",
+    "src/templates"
+  ],
   "keywords": [
     "dotastatscli",
     "cli",
