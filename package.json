@@ -1,19 +1,40 @@
 {
   "name": "dotastatscli",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "author": "Dmitriy Dzyuman <t.me/dimadzuman>",
+  "license": "MIT",
+  "description": "Simple, free and effective CLI application that allows you to receive statistics of your matches in dota and visualize it in a pleasant and understandable way.",
+  "main": "dist/main.js",
   "type": "commonjs",
   "scripts": {
     "build": "tsc",
-    "start": "npm run build && node dist/main.js",
-    "dima": "npm run build && node dist/main.js 64015685 200",
-    "siva": "npm run build && node dist/main.js 73325963 50",
-    "serj": "npm run build && node dist/main.js 73646633 50"
+    "start": "node dist/main.js",
+    "devStart": "npm run build && node dist/main.js"
   },
-  "keywords": [],
-  "author": "",
-  "license": "MIT",
+  "engines": {
+    "node": ">=18.14.0"
+  },
+  "bin": {
+    "dotastatscli": "dist/main.js"
+  },
+  "keywords": [
+    "dotastatscli",
+    "cli",
+    "dota",
+    "stats",
+    "statistics",
+    "visualization",
+    "shell",
+    "command line",
+    "console",
+    "terminal"
+  ],
+  "homepage": "https://github.com/ddgryaz/dotaStatsCLI#readme",
+  "bugs": "https://github.com/ddgryaz/dotaStatsCLI/issues",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ddgryaz/dotaStatsCLI"
+  },
   "devDependencies": {
     "@types/inquirer": "^9.0.7",
     "@types/jsdom": "^21.1.6",

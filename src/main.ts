@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 import fastify from "fastify";
 import open from "open";
 import { parserDotaBuff } from "./core/dotaBuff/parserDotaBuff";
