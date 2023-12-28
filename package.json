@@ -20,7 +20,8 @@
   },
   "files": [
     "dist/**/*",
-    "src/templates"
+    "src/templates",
+    "npm-shrinkwrap.json"
   ],
   "keywords": [
     "dotastatscli",
