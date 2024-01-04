@@ -76,6 +76,43 @@ dotastatscli 321580662 500
 This ID belongs to a professional Dota player. 
 After all the calculations have been made, the visualization will open in your browser.  
 
+For convenience, you can save players in a configuration file.
+You can use ```dotastatscli``` without arguments if you pre-populate the configuration file (```config.json```).   
+
+An example of a correctly completed ```config.json```:
+
+```json
+{
+  "players": [
+    {
+      "playerName": "YATORO",
+      "id": 321580662
+    },
+    {
+      "playerName": "COLLAPSE",
+      "id": 302214028
+    },
+    {
+      "playerName": "MIRA",
+      "id": 256156323
+    },
+    {
+      "playerName": "TORONTOTOKYO",
+      "id": 431770905
+    }
+  ],
+  "port": 6781
+}
+```
+
+Next, simply run the application without any arguments:
+
+```sh
+dotastatscli
+```
+
+The application will prompt you to select a player and enter 
+the required number of matches for analysis.
 
 
 ### Customization
