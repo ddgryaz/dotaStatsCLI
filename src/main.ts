@@ -20,11 +20,15 @@ import { getDateTime } from "./utils/getDateTime";
 import { IRecord } from "./types/IRecords";
 import { checkNetworkConnection } from "./utils/checkNetworkConnection";
 import { INTRODUCTION_TEXT } from "./constants/introductionText";
+import config from "./config.json";
+import { IConfig } from "./types/IConfig";
+import { inputValidator } from "./utils/inputValidator";
 
 const http = fastify();
-const [id, totalGames]: string[] = [process.argv[2], process.argv[3]];
+let [id, totalGames]: string[] = [process.argv[2], process.argv[3]];
 const HOST: string = "127.0.0.1";
-const PORT: number = 6781;
+const CONFIG: IConfig = config;
+const PORT: number = CONFIG.port || 6781;
 
 const providers = [
   {
@@ -39,6 +43,29 @@ const providers = [
 
 async function main(): Promise<void> {
   console.log(INTRODUCTION_TEXT);
+
+  if (!id && !totalGames && CONFIG && CONFIG.players?.length) {
+    const { playerId, matchesCount } = await inquirer.prompt([
+      {
+        type: "list",
+        name: "playerId",
+        message: "Configuration file detected! Select a player from the list:",
+        choices: CONFIG.players.map((player) => {
+          return { name: player.playerName, value: player.id };
+        }),
+      },
+      {
+        type: "input",
+        name: "matchesCount",
+        message: "Enter number of matches:",
+        default: 200,
+        validate: inputValidator,
+      },
+    ]);
+
+    id = playerId;
+    totalGames = matchesCount;
+  }
 
   const { service } = await inquirer.prompt([
     {
