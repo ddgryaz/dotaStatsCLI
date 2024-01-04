@@ -34,6 +34,7 @@ general information.
 - [Quick start and install](#quick-start-and-install)
 - [Customization](#customization)
 - [FAQ](#FAQ)
+- [Changelog](#Changelog)
 - [License](#license)
 
 ### How it works?
@@ -176,6 +177,10 @@ they look great in your game records section!
 
 > You can report a bug or ask a question related to the application
 > on the GitHub page in a special tab - [DotaStatsCLI-issues](https://github.com/ddgryaz/dotaStatsCLI/issues).
+
+### Changelog
+
+You can check out the changelog here - [CHANGELOG](https://github.com/ddgryaz/dotaStatsCLI/blob/master/CHANGELOG.md)
 
 ### License
 
