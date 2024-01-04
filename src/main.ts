@@ -27,8 +27,8 @@ import { inputValidator } from "./utils/inputValidator";
 const http = fastify();
 let [id, totalGames]: string[] = [process.argv[2], process.argv[3]];
 const HOST: string = "127.0.0.1";
-const PORT: number = 6781;
 const CONFIG: IConfig = config;
+const PORT: number = CONFIG.port || 6781;
 
 const providers = [
   {

@@ -5,4 +5,5 @@ interface IPlayersConfig {
 
 export interface IConfig {
   players?: IPlayersConfig[];
+  port?: number;
 }
