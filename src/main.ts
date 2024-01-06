@@ -124,6 +124,12 @@ async function main(): Promise<void> {
     decorateReply: false,
   });
 
+  http.get(FULL_ROUTER_NAME + "/images/icon.png", function (req, reply) {
+    reply.sendFile(
+      path.join(__dirname, "..", "src", "templates", "images", "icon.png"),
+    );
+  });
+
   http.get(FULL_ROUTER_NAME + "/styles/index.css", function (req, reply) {
     reply.sendFile(
       path.join(__dirname, "..", "src", "templates", "styles", "index.css"),
