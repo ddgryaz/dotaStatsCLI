@@ -23,6 +23,7 @@ import { INTRODUCTION_TEXT } from "./constants/introductionText";
 import config from "./config.json";
 import { IConfig } from "./types/IConfig";
 import { inputValidator } from "./utils/inputValidator";
+import { PATH_TO_CONFIG } from "./constants/pathToConfig";
 
 const http = fastify();
 let [id, totalGames]: string[] = [process.argv[2], process.argv[3]];
@@ -43,6 +44,8 @@ const providers = [
 
 async function main(): Promise<void> {
   console.log(INTRODUCTION_TEXT);
+
+  console.log(`The configuration file is here - ${PATH_TO_CONFIG}\n`);
 
   if (!id && !totalGames && CONFIG && CONFIG.players?.length) {
     const { playerId, matchesCount } = await inquirer.prompt([
