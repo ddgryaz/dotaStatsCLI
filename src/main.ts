@@ -130,6 +130,8 @@ async function main(): Promise<void> {
           JSON.stringify(CONFIG),
         );
       }
+    } else {
+      logger.info(`The player is already known - ${searchPlayer.playerName}`);
     }
 
     logger.info("Start of data collection...");
