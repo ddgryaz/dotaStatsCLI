@@ -48,47 +48,6 @@ async function main(): Promise<void> {
 
   console.log(`The configuration file is here - ${PATH_TO_CONFIG}\n`);
 
-  if (id && totalGames) {
-    const searchPlayer = CONFIG.players?.find(
-      (player) => player.id === Number(id),
-    );
-
-    if (!searchPlayer) {
-      const { answerForSavePlayer } = await inquirer.prompt([
-        {
-          type: "list",
-          name: "answerForSavePlayer",
-          message: `Save player (${id}) in config file?:`,
-          choices: [
-            { name: "Yes", value: true },
-            { name: "No", value: false },
-          ],
-        },
-      ]);
-
-      if (answerForSavePlayer) {
-        const { playerNameForSave } = await inquirer.prompt([
-          {
-            type: "input",
-            name: "playerNameForSave",
-            message: "Enter player name:",
-            validate: Validator.inputPlayerNameValidator,
-          },
-        ]);
-
-        CONFIG.players?.push({
-          playerName: playerNameForSave,
-          id: Number(id),
-        });
-
-        writeFileSync(
-          path.join(__dirname, "config.json"),
-          JSON.stringify(CONFIG),
-        );
-      }
-    }
-  }
-
   if (!id && !totalGames && CONFIG && CONFIG.players?.length) {
     const { playerId, matchesCount } = await inquirer.prompt([
       {
@@ -132,6 +91,47 @@ async function main(): Promise<void> {
 
   try {
     await checkNetworkConnection();
+
+    Validator.checkArgs(id, totalGames);
+
+    const searchPlayer = CONFIG.players?.find(
+      (player) => player.id === Number(id),
+    );
+
+    if (!searchPlayer) {
+      const { answerForSavePlayer } = await inquirer.prompt([
+        {
+          type: "list",
+          name: "answerForSavePlayer",
+          message: `Save player (${id}) in config file?:`,
+          choices: [
+            { name: "Yes", value: true },
+            { name: "No", value: false },
+          ],
+        },
+      ]);
+
+      if (answerForSavePlayer) {
+        const { playerNameForSave } = await inquirer.prompt([
+          {
+            type: "input",
+            name: "playerNameForSave",
+            message: "Enter player name:",
+            validate: Validator.inputPlayerNameValidator,
+          },
+        ]);
+
+        CONFIG.players?.push({
+          playerName: playerNameForSave,
+          id: Number(id),
+        });
+
+        writeFileSync(
+          path.join(__dirname, "config.json"),
+          JSON.stringify(CONFIG),
+        );
+      }
+    }
 
     logger.info("Start of data collection...");
 
