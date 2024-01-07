@@ -91,7 +91,6 @@ async function main(): Promise<void> {
 
   try {
     await checkNetworkConnection();
-
     Validator.checkArgs(id, totalGames);
 
     const searchPlayer = CONFIG.players?.find(
