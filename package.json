@@ -10,7 +10,8 @@
     "build": "tsc",
     "start": "node dist/main.js",
     "devStart": "npm run build && node dist/main.js",
-    "prepublishOnly": "tsc"
+    "rmrf": "rm -rf dist",
+    "prepublishOnly": "npm run rmrf && tsc"
   },
   "engines": {
     "node": ">=18.14.0"

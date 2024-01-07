@@ -5,6 +5,7 @@ import open from "open";
 import { parserDotaBuff } from "./core/dotaBuff/parserDotaBuff";
 import * as process from "process";
 import { readFile } from "fs/promises";
+import { writeFileSync } from "fs";
 import * as path from "path";
 import { IProviderResult } from "./types/IProviderResult";
 import { SaveDataError } from "./errors/saveDataError";
@@ -22,8 +23,8 @@ import { checkNetworkConnection } from "./utils/checkNetworkConnection";
 import { INTRODUCTION_TEXT } from "./constants/introductionText";
 import config from "./config.json";
 import { IConfig } from "./types/IConfig";
-import { inputValidator } from "./utils/inputValidator";
 import { PATH_TO_CONFIG } from "./constants/pathToConfig";
+import { Validator } from "./utils/validator";
 
 const http = fastify();
 let [id, totalGames]: string[] = [process.argv[2], process.argv[3]];
@@ -47,6 +48,47 @@ async function main(): Promise<void> {
 
   console.log(`The configuration file is here - ${PATH_TO_CONFIG}\n`);
 
+  if (id && totalGames) {
+    const searchPlayer = CONFIG.players?.find(
+      (player) => player.id === Number(id),
+    );
+
+    if (!searchPlayer) {
+      const { answerForSavePlayer } = await inquirer.prompt([
+        {
+          type: "list",
+          name: "answerForSavePlayer",
+          message: `Save player (${id}) in config file?:`,
+          choices: [
+            { name: "Yes", value: true },
+            { name: "No", value: false },
+          ],
+        },
+      ]);
+
+      if (answerForSavePlayer) {
+        const { playerNameForSave } = await inquirer.prompt([
+          {
+            type: "input",
+            name: "playerNameForSave",
+            message: "Enter player name:",
+            validate: Validator.inputPlayerNameValidator,
+          },
+        ]);
+
+        CONFIG.players?.push({
+          playerName: playerNameForSave,
+          id: Number(id),
+        });
+
+        writeFileSync(
+          path.join(__dirname, "config.json"),
+          JSON.stringify(CONFIG),
+        );
+      }
+    }
+  }
+
   if (!id && !totalGames && CONFIG && CONFIG.players?.length) {
     const { playerId, matchesCount } = await inquirer.prompt([
       {
@@ -62,7 +104,7 @@ async function main(): Promise<void> {
         name: "matchesCount",
         message: "Enter number of matches:",
         default: 200,
-        validate: inputValidator,
+        validate: Validator.inputMatchCountValidator,
       },
     ]);
 
@@ -88,10 +130,11 @@ async function main(): Promise<void> {
   let data: IProviderResult | null;
   let error: string | null;
 
-  logger.info("Start of data collection...");
-
   try {
     await checkNetworkConnection();
+
+    logger.info("Start of data collection...");
+
     data = await service(Number(id), Number(totalGames));
     error = null;
   } catch (e) {
