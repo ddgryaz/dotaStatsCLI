@@ -11,6 +11,7 @@
 <div align="center">
 
 [![npm-version](https://img.shields.io/npm/v/dotastatscli?color=%2335b18e)](https://www.npmjs.com/package/dotastatscli)
+[![npm](https://img.shields.io/npm/dt/dotastatscli)](https://www.npmjs.com/package/dotastatscli)
 [![license](https://img.shields.io/npm/l/dotastatscli?color=blue)](https://github.com/ddgryaz/dotaStatsCLI?#LICENSE)
 
 </div>
@@ -68,6 +69,12 @@ The easiest and best way to install DotaStatsCLI - is to use [NPM](https://docs.
 npm install -g dotastatscli
 ```
 
+If you already have an older version installed, run:
+
+```sh
+npm update -g dotastatscli
+```
+
 Use the app with two required arguments, PLAYER_ID and GAMES_COUNT, like this:
 
 ```sh
@@ -76,6 +83,9 @@ dotastatscli 321580662 500
 
 This ID belongs to a professional Dota player. 
 After all the calculations have been made, the visualization will open in your browser.  
+
+Also, the first time you analyze a player, you will be asked to save it to a configuration file. 
+You can save players for quick access to their statistics.  
 
 For convenience, you can save players in a configuration file.
 You can use ```dotastatscli``` without arguments if you pre-populate the configuration file (```config.json```).   
@@ -180,7 +190,7 @@ they look great in your game records section!
 
 ### Changelog
 
-You can check out the changelog here - [CHANGELOG](https://github.com/ddgryaz/dotaStatsCLI/blob/master/CHANGELOG.md)
+You can check out the changelog here - [CHANGELOG](https://github.com/ddgryaz/dotaStatsCLI/blob/master/CHANGELOG.md).
 
 ### License
 

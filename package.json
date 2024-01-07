@@ -1,6 +1,6 @@
 {
   "name": "dotastatscli",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "author": "Dmitriy Dzyuman <t.me/dimadzuman>",
   "license": "MIT",
   "description": "Simple, free and effective CLI application that allows you to receive statistics of your matches in dota and visualize it in a pleasant and understandable way.",
@@ -10,7 +10,8 @@
     "build": "tsc",
     "start": "node dist/main.js",
     "devStart": "npm run build && node dist/main.js",
-    "prepublishOnly": "tsc"
+    "rmrf": "rm -rf dist",
+    "prepublishOnly": "npm run rmrf && tsc"
   },
   "engines": {
     "node": ">=18.14.0"
