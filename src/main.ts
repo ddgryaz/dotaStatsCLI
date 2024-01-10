@@ -44,54 +44,53 @@ const providers = [
 ];
 
 async function main(): Promise<void> {
-  console.log(INTRODUCTION_TEXT);
+  let data: IProviderResult | null;
+  let error: string | null;
+  let service: (id: number, gamesCount: number) => Promise<IProviderResult>;
 
-  console.log(`The configuration file is here - ${PATH_TO_CONFIG}\n`);
+  try {
+    console.log(INTRODUCTION_TEXT);
 
-  if (!id && !totalGames && CONFIG && CONFIG.players?.length) {
-    const { playerId, matchesCount } = await inquirer.prompt([
+    console.log(`The configuration file is here - ${PATH_TO_CONFIG}\n`);
+
+    await checkNetworkConnection();
+
+    if (!id && !totalGames && CONFIG && CONFIG.players?.length) {
+      const { playerId, matchesCount } = await inquirer.prompt([
+        {
+          type: "list",
+          name: "playerId",
+          message:
+            "Configuration file detected! Select a player from the list:",
+          choices: CONFIG.players.map((player) => {
+            return { name: player.playerName, value: player.id };
+          }),
+        },
+        {
+          type: "input",
+          name: "matchesCount",
+          message: "Enter number of matches:",
+          default: 200,
+          validate: Validator.inputMatchCountValidator,
+        },
+      ]);
+
+      id = playerId;
+      totalGames = matchesCount;
+    }
+
+    Validator.checkArgs(id, totalGames);
+
+    const { serviceProvider } = await inquirer.prompt([
       {
         type: "list",
-        name: "playerId",
-        message: "Configuration file detected! Select a player from the list:",
-        choices: CONFIG.players.map((player) => {
-          return { name: player.playerName, value: player.id };
-        }),
-      },
-      {
-        type: "input",
-        name: "matchesCount",
-        message: "Enter number of matches:",
-        default: 200,
-        validate: Validator.inputMatchCountValidator,
+        name: "serviceProvider",
+        message: "Select a data provider:",
+        choices: providers,
       },
     ]);
 
-    id = playerId;
-    totalGames = matchesCount;
-  }
-
-  const { service } = await inquirer.prompt([
-    {
-      type: "list",
-      name: "service",
-      message: "Select a data provider:",
-      choices: providers,
-    },
-  ]);
-
-  const provider = providers.find((el) => el.value === service);
-  const FULL_ROUTER_NAME: string = ROUTER_NAME.replace(
-    "$PROVIDER",
-    provider?.name as string,
-  ).replace("$ID", id);
-
-  let data: IProviderResult | null;
-  let error: string | null;
-
-  try {
-    await checkNetworkConnection();
-    Validator.checkArgs(id, totalGames);
+    service = serviceProvider;
 
     const searchPlayer = CONFIG.players?.find(
       (player) => player.id === Number(id),
@@ -147,6 +146,13 @@ async function main(): Promise<void> {
       error = e.message;
     }
   }
+
+  const provider = providers.find((el) => el.value === service);
+
+  const FULL_ROUTER_NAME: string = ROUTER_NAME.replace(
+    "$PROVIDER",
+    provider?.name || "error",
+  ).replace("$ID", id || "unknownPlayer");
 
   logger.info("Creating a visualization.");
 
