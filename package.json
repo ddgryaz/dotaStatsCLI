@@ -11,7 +11,8 @@
     "start": "node dist/main.js",
     "devStart": "npm run build && node dist/main.js",
     "rmrf": "rm -rf dist",
-    "prepublishOnly": "npm run rmrf && tsc"
+    "prepublishOnly": "npm run rmrf && npm run build",
+    "prebuild": "node -p \"'export const APP_VERSION = ' + JSON.stringify(require('./package.json').version) + ';'\" > src/constants/version.ts"
   },
   "engines": {
     "node": ">=18.14.0"

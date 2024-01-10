@@ -25,6 +25,7 @@ import config from "./config.json";
 import { IConfig } from "./types/IConfig";
 import { PATH_TO_CONFIG } from "./constants/pathToConfig";
 import { Validator } from "./utils/validator";
+import { APP_VERSION } from "./constants/version";
 
 const http = fastify();
 let [id, totalGames]: string[] = [process.argv[2], process.argv[3]];
@@ -49,6 +50,8 @@ async function main(): Promise<void> {
   let service: (id: number, gamesCount: number) => Promise<IProviderResult>;
 
   try {
+    console.log(APP_VERSION); // todo: remove
+
     console.log(INTRODUCTION_TEXT);
 
     console.log(`The configuration file is here - ${PATH_TO_CONFIG}\n`);
