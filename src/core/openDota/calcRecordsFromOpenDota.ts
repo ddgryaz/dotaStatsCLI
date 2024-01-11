@@ -10,13 +10,16 @@ const getMatchUrl = (matchId: number): string => {
   return "https://www.dotabuff.com/matches/".concat(matchId.toString());
 };
 
+const MIN_DURATION = 60 * 6; // seconds * minutes = duration in seconds
+
 export async function calcRecordsFromOpenDota(
   arrayWithGames: IAllMatches[],
   endpointForHeroName: string,
 ): Promise<IRecords> {
   const matchesWithRecords: { [key: string]: IAllMatches } = getRecords(
     arrayWithGames.filter((match) => {
-      if (match.game_mode in gameModes) return match;
+      if (match.game_mode in gameModes && match.duration > MIN_DURATION)
+        return match;
     }),
   ) as {
     [key: string]: IAllMatches;
