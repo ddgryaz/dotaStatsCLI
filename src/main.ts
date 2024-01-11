@@ -25,7 +25,8 @@ import config from "./config.json";
 import { IConfig } from "./types/IConfig";
 import { PATH_TO_CONFIG } from "./constants/pathToConfig";
 import { Validator } from "./utils/validator";
-import { APP_VERSION } from "./constants/version";
+import { APP_VERSION } from "./constants/version"; // generated at build time.
+import { checkForUpdates } from "./utils/checkForUpdates";
 
 const http = fastify();
 let [id, totalGames]: string[] = [process.argv[2], process.argv[3]];
@@ -48,15 +49,22 @@ async function main(): Promise<void> {
   let data: IProviderResult | null;
   let error: string | null;
   let service: (id: number, gamesCount: number) => Promise<IProviderResult>;
+  let actualVersion: boolean | null;
+  let updateNotification: string | null;
 
   try {
-    console.log(APP_VERSION); // todo: remove
-
     console.log(INTRODUCTION_TEXT);
 
     console.log(`The configuration file is here - ${PATH_TO_CONFIG}\n`);
 
     await checkNetworkConnection();
+
+    ({ actualVersion, updateNotification } =
+      await checkForUpdates(APP_VERSION));
+
+    if (actualVersion !== null && updateNotification) {
+      console.log(`v.${APP_VERSION}. ${updateNotification}\n`);
+    }
 
     if (!id && !totalGames && CONFIG && CONFIG.players?.length) {
       const { playerId, matchesCount } = await inquirer.prompt([
@@ -84,16 +92,14 @@ async function main(): Promise<void> {
 
     Validator.checkArgs(id, totalGames);
 
-    const { serviceProvider } = await inquirer.prompt([
+    ({ service } = await inquirer.prompt([
       {
         type: "list",
-        name: "serviceProvider",
+        name: "service",
         message: "Select a data provider:",
         choices: providers,
       },
-    ]);
-
-    service = serviceProvider;
+    ]));
 
     const searchPlayer = CONFIG.players?.find(
       (player) => player.id === Number(id),
@@ -316,6 +322,12 @@ async function main(): Promise<void> {
 
       const htmlBlockForProvider: string = `Your data provider - ${provider?.name?.toUpperCase()}`;
 
+      const htmlBlockForVersion: string = `
+      <div>
+        v.${APP_VERSION}. ${updateNotification ? `${updateNotification}` : ""}
+      </div>
+      `;
+
       let modifiedValidHtml = validHtml
         .replaceAll("$APPNAME", APPLICATION_NAME)
         .replace("$NICKNAME", data.playerName)
@@ -328,7 +340,8 @@ async function main(): Promise<void> {
         .replace("$PLAYER_WINRATE", data.playerStats.overallWinRate.toString())
         .replace("$ITEMS", "$ITEMS ".repeat(data.TOTAL_TOP))
         .replace("$HEROES", "$HEROES ".repeat(data.TOTAL_TOP))
-        .replace("$RECORDS", "$RECORDS ".repeat(recordsBlocks.length));
+        .replace("$RECORDS", "$RECORDS ".repeat(recordsBlocks.length))
+        .replace("$APP_VERSION", htmlBlockForVersion);
 
       for (let i = 0; i < recordsBlocks.length; i++) {
         modifiedValidHtml = modifiedValidHtml.replace(
