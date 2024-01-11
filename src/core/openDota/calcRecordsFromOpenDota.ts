@@ -4,6 +4,7 @@ import { IRecords } from "../../types/IRecords";
 import { getTimeFromSeconds } from "../../utils/getTimeFromSeconds";
 import { getImageAndNameIOrH } from "./getImageAndNameIOrH";
 import { sleep } from "../../utils/sleep";
+import { gameModes } from "../../constants/gameModes";
 
 const getMatchUrl = (matchId: number): string => {
   return "https://www.dotabuff.com/matches/".concat(matchId.toString());
@@ -14,7 +15,9 @@ export async function calcRecordsFromOpenDota(
   endpointForHeroName: string,
 ): Promise<IRecords> {
   const matchesWithRecords: { [key: string]: IAllMatches } = getRecords(
-    arrayWithGames,
+    arrayWithGames.filter((match) => {
+      if (match.game_mode in gameModes) return match;
+    }),
   ) as {
     [key: string]: IAllMatches;
   };

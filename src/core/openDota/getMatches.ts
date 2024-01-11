@@ -70,6 +70,7 @@ export async function getMatches(
       assists: match.assists,
       deaths: match.deaths,
       duration: match.duration,
+      game_mode: match.game_mode,
     };
   });
 }
