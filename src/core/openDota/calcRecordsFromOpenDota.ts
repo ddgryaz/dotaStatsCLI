@@ -10,7 +10,11 @@ const getMatchUrl = (matchId: number): string => {
   return "https://www.dotabuff.com/matches/".concat(matchId.toString());
 };
 
-const MIN_DURATION = 60 * 6; // seconds * minutes = duration in seconds
+/*
+ * seconds * minutes = duration in seconds.
+ * A minimum value has been set to prevent such games from being included in records - https://www.dotabuff.com/matches/1492991064
+ */
+const MIN_DURATION: number = 60 * 6;
 
 export async function calcRecordsFromOpenDota(
   arrayWithGames: IAllMatches[],
