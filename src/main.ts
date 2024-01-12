@@ -25,6 +25,8 @@ import config from "./config.json";
 import { IConfig } from "./types/IConfig";
 import { PATH_TO_CONFIG } from "./constants/pathToConfig";
 import { Validator } from "./utils/validator";
+import { APP_VERSION } from "./constants/version"; // generated at build time.
+import { checkForUpdates } from "./utils/checkForUpdates";
 
 const http = fastify();
 let [id, totalGames]: string[] = [process.argv[2], process.argv[3]];
@@ -44,54 +46,60 @@ const providers = [
 ];
 
 async function main(): Promise<void> {
-  console.log(INTRODUCTION_TEXT);
-
-  console.log(`The configuration file is here - ${PATH_TO_CONFIG}\n`);
-
-  if (!id && !totalGames && CONFIG && CONFIG.players?.length) {
-    const { playerId, matchesCount } = await inquirer.prompt([
-      {
-        type: "list",
-        name: "playerId",
-        message: "Configuration file detected! Select a player from the list:",
-        choices: CONFIG.players.map((player) => {
-          return { name: player.playerName, value: player.id };
-        }),
-      },
-      {
-        type: "input",
-        name: "matchesCount",
-        message: "Enter number of matches:",
-        default: 200,
-        validate: Validator.inputMatchCountValidator,
-      },
-    ]);
-
-    id = playerId;
-    totalGames = matchesCount;
-  }
-
-  const { service } = await inquirer.prompt([
-    {
-      type: "list",
-      name: "service",
-      message: "Select a data provider:",
-      choices: providers,
-    },
-  ]);
-
-  const provider = providers.find((el) => el.value === service);
-  const FULL_ROUTER_NAME: string = ROUTER_NAME.replace(
-    "$PROVIDER",
-    provider?.name as string,
-  ).replace("$ID", id);
-
   let data: IProviderResult | null;
   let error: string | null;
+  let service: (id: number, gamesCount: number) => Promise<IProviderResult>;
+  let actualVersion: boolean | null;
+  let updateNotification: string | null;
 
   try {
+    console.log(INTRODUCTION_TEXT);
+
+    console.log(`The configuration file is here - ${PATH_TO_CONFIG}\n`);
+
     await checkNetworkConnection();
+
+    ({ actualVersion, updateNotification } =
+      await checkForUpdates(APP_VERSION));
+
+    if (actualVersion !== null && updateNotification) {
+      console.log(`v.${APP_VERSION}. ${updateNotification}\n`);
+    }
+
+    if (!id && !totalGames && CONFIG && CONFIG.players?.length) {
+      const { playerId, matchesCount } = await inquirer.prompt([
+        {
+          type: "list",
+          name: "playerId",
+          message:
+            "Configuration file detected! Select a player from the list:",
+          choices: CONFIG.players.map((player) => {
+            return { name: player.playerName, value: player.id };
+          }),
+        },
+        {
+          type: "input",
+          name: "matchesCount",
+          message: "Enter number of matches:",
+          default: 200,
+          validate: Validator.inputMatchCountValidator,
+        },
+      ]);
+
+      id = playerId;
+      totalGames = matchesCount;
+    }
+
     Validator.checkArgs(id, totalGames);
+
+    ({ service } = await inquirer.prompt([
+      {
+        type: "list",
+        name: "service",
+        message: "Select a data provider:",
+        choices: providers,
+      },
+    ]));
 
     const searchPlayer = CONFIG.players?.find(
       (player) => player.id === Number(id),
@@ -148,6 +156,13 @@ async function main(): Promise<void> {
     }
   }
 
+  const provider = providers.find((el) => el.value === service);
+
+  const FULL_ROUTER_NAME: string = ROUTER_NAME.replace(
+    "$PROVIDER",
+    provider?.name || "error",
+  ).replace("$ID", id || "unknownPlayer");
+
   logger.info("Creating a visualization.");
 
   const dateTime: string = getDateTime();
@@ -196,22 +211,6 @@ async function main(): Promise<void> {
             "templates",
             "images",
             "errorImage.png",
-          ),
-        );
-      },
-    );
-
-    http.get(
-      FULL_ROUTER_NAME + "/images/backgroundError.jpg",
-      function (req, reply) {
-        reply.sendFile(
-          path.join(
-            __dirname,
-            "..",
-            "src",
-            "templates",
-            "images",
-            "backgroundError.jpg",
           ),
         );
       },
@@ -307,6 +306,12 @@ async function main(): Promise<void> {
 
       const htmlBlockForProvider: string = `Your data provider - ${provider?.name?.toUpperCase()}`;
 
+      const htmlBlockForVersion: string = `
+      <div>
+        v.${APP_VERSION}. ${updateNotification ? `${updateNotification}` : ""}
+      </div>
+      `;
+
       let modifiedValidHtml = validHtml
         .replaceAll("$APPNAME", APPLICATION_NAME)
         .replace("$NICKNAME", data.playerName)
@@ -319,7 +324,8 @@ async function main(): Promise<void> {
         .replace("$PLAYER_WINRATE", data.playerStats.overallWinRate.toString())
         .replace("$ITEMS", "$ITEMS ".repeat(data.TOTAL_TOP))
         .replace("$HEROES", "$HEROES ".repeat(data.TOTAL_TOP))
-        .replace("$RECORDS", "$RECORDS ".repeat(recordsBlocks.length));
+        .replace("$RECORDS", "$RECORDS ".repeat(recordsBlocks.length))
+        .replace("$APP_VERSION", htmlBlockForVersion);
 
       for (let i = 0; i < recordsBlocks.length; i++) {
         modifiedValidHtml = modifiedValidHtml.replace(
@@ -388,7 +394,7 @@ async function main(): Promise<void> {
           .replaceAll("$APPNAME", APPLICATION_NAME);
       }
 
-      reply.code(500).type("text/html; charset=utf-8").send(modifiedValidHtml);
+      reply.code(200).type("text/html; charset=utf-8").send(modifiedValidHtml);
     }
 
     logger.info(

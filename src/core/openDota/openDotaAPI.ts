@@ -17,7 +17,7 @@ import { ImpossibleGetDataError } from "../../errors/impossibleGetDataError";
 
 const providerHost = "https://api.opendota.com";
 const playerEndpoint = `${providerHost}/api/players/REQUIRED_ID`;
-const matchesEndpoint = `${providerHost}/api/players/REQUIRED_ID/matches?significant=0&project=item_0&project=item_1&project=item_2&project=item_3&project=item_4&project=item_5&project=hero_id&project=kills&project=deaths&project=assists&project=duration&limit=GAMES_COUNT`;
+const matchesEndpoint = `${providerHost}/api/players/REQUIRED_ID/matches?significant=0&project=item_0&project=item_1&project=item_2&project=item_3&project=item_4&project=item_5&project=hero_id&project=kills&project=deaths&project=assists&project=duration&project=game_mode&limit=GAMES_COUNT`;
 const heroesInfoEndpoint = `${providerHost}/api/constants/heroes`;
 const itemsInfoEndpoint = `${providerHost}/api/constants/items`;
 

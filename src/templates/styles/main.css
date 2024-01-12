@@ -366,6 +366,7 @@ thead {
 }
 
 .footer {
+  display: flex;
   width: 100%;
 }
 .footer__wrapper {
@@ -389,4 +390,11 @@ thead {
 
 .footer__link p {
   margin-left: 5px;
+}
+
+.footer__version {
+  color: #fff;
+  font-size: 15px;
+  margin-right: auto;
+  opacity: 0.5;
 }

@@ -4,17 +4,28 @@ import { IRecords } from "../../types/IRecords";
 import { getTimeFromSeconds } from "../../utils/getTimeFromSeconds";
 import { getImageAndNameIOrH } from "./getImageAndNameIOrH";
 import { sleep } from "../../utils/sleep";
+import { gameModes } from "../../constants/gameModes";
 
 const getMatchUrl = (matchId: number): string => {
   return "https://www.dotabuff.com/matches/".concat(matchId.toString());
 };
+
+/*
+ * seconds * minutes = duration in seconds.
+ * A minimum value has been set to prevent such games from being included in records - https://www.dotabuff.com/matches/1492991064
+ * 450 sec (7.5 minutes) - the time when the aghanim's shard will be available for purchase in turbo mode.
+ */
+const MIN_DURATION: number = 450;
 
 export async function calcRecordsFromOpenDota(
   arrayWithGames: IAllMatches[],
   endpointForHeroName: string,
 ): Promise<IRecords> {
   const matchesWithRecords: { [key: string]: IAllMatches } = getRecords(
-    arrayWithGames,
+    arrayWithGames.filter((match) => {
+      if (match.game_mode in gameModes && match.duration > MIN_DURATION)
+        return match;
+    }),
   ) as {
     [key: string]: IAllMatches;
   };

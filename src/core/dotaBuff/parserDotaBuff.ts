@@ -154,7 +154,12 @@ export async function parserDotaBuff(
         avatar: game.heroAvatar,
       };
     })
-    .flat();
+    .flat()
+    .filter((hero) => {
+      if (hero.name.toLowerCase() !== "no hero") {
+        return hero;
+      }
+    });
 
   logger.info("Found all the heroes.");
 

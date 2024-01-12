@@ -8,4 +8,5 @@ export interface IAllMatches {
   deaths: number;
   duration: number; // in seconds
   hero_name?: string;
+  game_mode: number;
 }
