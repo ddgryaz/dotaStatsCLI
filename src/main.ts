@@ -215,22 +215,6 @@ async function main(): Promise<void> {
         );
       },
     );
-
-    http.get(
-      FULL_ROUTER_NAME + "/images/backgroundError.jpg",
-      function (req, reply) {
-        reply.sendFile(
-          path.join(
-            __dirname,
-            "..",
-            "src",
-            "templates",
-            "images",
-            "backgroundError.jpg",
-          ),
-        );
-      },
-    );
   } else {
     /*
      * Sending an image. Only used on the home page.
@@ -410,7 +394,7 @@ async function main(): Promise<void> {
           .replaceAll("$APPNAME", APPLICATION_NAME);
       }
 
-      reply.code(500).type("text/html; charset=utf-8").send(modifiedValidHtml);
+      reply.code(200).type("text/html; charset=utf-8").send(modifiedValidHtml);
     }
 
     logger.info(

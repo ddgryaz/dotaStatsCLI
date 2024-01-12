@@ -1,8 +1,27 @@
+.page__error {
+  height: 100%;
+  width: 100%;
+  font-family: "Cabin", sans-serif;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
+  -moz-text-size-adjust: 100%;
+  margin: 0 auto;
+}
+
 .error {
   display: flex;
+  height: 100%;
   justify-content: center;
-  height: 100vh;
-  background: url(/images/backgroundError.jpg);
+  background: rgb(2, 0, 36);
+  background: radial-gradient(
+    circle,
+    rgba(2, 0, 36, 1) 0%,
+    rgba(0, 0, 0, 1) 86%,
+    rgba(53, 177, 142, 1) 100%
+  );
 }
 .error__inner {
   margin: 80px auto 0;
@@ -50,8 +69,8 @@
 }
 .error__image {
   margin: auto auto 0;
-  width: 500px;
-  height: 500px;
+  width: 400px;
+  height: 400px;
 }
 .error__image img {
   width: 100%;
