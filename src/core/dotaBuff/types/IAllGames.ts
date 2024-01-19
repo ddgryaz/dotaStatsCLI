@@ -10,4 +10,5 @@ export interface IAllGames {
   assists: number;
   matchUrl: string;
   duration: number; // in seconds
+  game_mode: string;
 }

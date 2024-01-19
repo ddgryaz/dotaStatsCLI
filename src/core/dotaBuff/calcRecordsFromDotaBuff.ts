@@ -2,6 +2,8 @@ import { IAllGames } from "./types/IAllGames";
 import { IRecords } from "../../types/IRecords";
 import { getRecords } from "../getRecords";
 import { getTimeFromSeconds } from "../../utils/getTimeFromSeconds";
+import { gameModes } from "../../constants/gameModes";
+import { MIN_DURATION } from "../../constants/minDuration";
 
 export function calcRecordsFromDotaBuff(arrayWithGames: IAllGames[]): IRecords {
   const {
@@ -9,7 +11,13 @@ export function calcRecordsFromDotaBuff(arrayWithGames: IAllGames[]): IRecords {
     gameWithRecordDeaths,
     gameWithRecordAssists,
     gameWithRecordDuration,
-  } = getRecords(arrayWithGames) as { [key: string]: IAllGames };
+  } = getRecords(
+    arrayWithGames.filter((game) => {
+      if (game.game_mode in gameModes && game.duration > MIN_DURATION) {
+        return game;
+      }
+    }),
+  ) as { [key: string]: IAllGames };
 
   return {
     "Most Kills": {
