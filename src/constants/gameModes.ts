@@ -1,3 +1,7 @@
+/*
+ * Game mods, matches from which will be taken into account when calculating the player's records.
+ * Key for dotaBuff, value for openDota.
+ */
 export enum gameModes {
   all_pick = 1, // old allPick
   captains_mode = 2,
