@@ -322,8 +322,8 @@ async function main(): Promise<void> {
         .replace("$PLAYER_WIN", data.playerStats.win.toString())
         .replace("$PLAYER_LOSE", data.playerStats.lose.toString())
         .replace("$PLAYER_WINRATE", data.playerStats.overallWinRate.toString())
-        .replace("$ITEMS", "$ITEMS ".repeat(data.TOTAL_TOP))
-        .replace("$HEROES", "$HEROES ".repeat(data.TOTAL_TOP))
+        .replace("$ITEMS", "$ITEMS ".repeat(data.TOTAL_TOP_ITEMS))
+        .replace("$HEROES", "$HEROES ".repeat(data.TOTAL_TOP_HEROES))
         .replace("$RECORDS", "$RECORDS ".repeat(recordsBlocks.length))
         .replace("$APP_VERSION", htmlBlockForVersion);
 
@@ -334,15 +334,17 @@ async function main(): Promise<void> {
         );
       }
 
-      for (let i = 0; i < data.TOTAL_TOP; i++) {
-        modifiedValidHtml = modifiedValidHtml.replace(
-          "$ITEMS",
-          arrayItemsForTable[i],
-        );
-
+      for (let i = 0; i < data.TOTAL_TOP_HEROES; i++) {
         modifiedValidHtml = modifiedValidHtml.replace(
           "$HEROES",
           arrayHeroesForTable[i],
+        );
+      }
+
+      for (let i = 0; i < data.TOTAL_TOP_ITEMS; i++) {
+        modifiedValidHtml = modifiedValidHtml.replace(
+          "$ITEMS",
+          arrayItemsForTable[i],
         );
       }
 

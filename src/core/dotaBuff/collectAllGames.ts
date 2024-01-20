@@ -71,6 +71,12 @@ export function collectAllGames(document: Document): IAllGames[] {
         assists: Number(assists),
         matchUrl,
         duration: calcDuration(durationRaw),
+        game_mode:
+          gameRow
+            .querySelector("td.r-none-mobile div.subtext")
+            ?.textContent?.trim()
+            ?.toLowerCase()
+            ?.replaceAll(" ", "_") || "",
       };
     },
   );

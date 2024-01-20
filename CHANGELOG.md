@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.3.1] - 2024-01-20
+
+### Fixed
+
+- DOTABUFF/checking game modes when calculating player records (Custom modes, games with bots, and other seasonal or unpopular modes are excluded).
+- DOTABUFF/checking match duration when calculating player records (Matches that last less than 7.5 minutes will be excluded. To eliminate the possibility of unfair gaming indicators).
+- Bug that occurred for players who play with fewer heroes than the number of heroes in the top-rating.
+
 ## [1.3.0] - 2024-01-12
 
 ### Added

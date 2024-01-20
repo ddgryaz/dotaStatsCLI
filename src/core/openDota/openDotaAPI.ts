@@ -79,6 +79,16 @@ export async function openDotaApi(
   const mostPopularItems: IMostPopular[] = [];
   const mostPopularHeroes: IMostPopular[] = [];
 
+  const TOTAL_TOP_HEROES: number =
+    mostPopularHeroIdsWithoutStats.length <= TOTAL_TOP
+      ? mostPopularHeroIdsWithoutStats.length
+      : TOTAL_TOP;
+
+  const TOTAL_TOP_ITEMS: number =
+    mostPopularItemIdsWithoutStats.length <= TOTAL_TOP
+      ? mostPopularItemIdsWithoutStats.length
+      : TOTAL_TOP;
+
   logger.info("Matches won, popular heroes and items calculated.");
 
   const records: IRecords = await calcRecordsFromOpenDota(
@@ -88,7 +98,7 @@ export async function openDotaApi(
 
   logger.info(`Calculated your records for ${matches.length} games.`);
 
-  for (let i: number = 0; i < TOTAL_TOP; i++) {
+  for (let i: number = 0; i < TOTAL_TOP_HEROES; i++) {
     const coincidencesHero = sortByPopularityNumbers(allHeroesIds).filter(
       (heroId) => heroId === mostPopularHeroIdsWithoutStats[i],
     );
@@ -97,28 +107,9 @@ export async function openDotaApi(
       (match) => match.hero_id === mostPopularHeroIdsWithoutStats[i],
     );
 
-    const coincidencesItem = sortByPopularityNumbers(allItemsIds).filter(
-      (itemId) => itemId === mostPopularItemIdsWithoutStats[i],
-    );
-
-    const winRateForItem = winMatches.filter((match) => {
-      for (const itemId of match.items_ids) {
-        if (itemId === mostPopularItemIdsWithoutStats[i]) {
-          return true;
-        }
-      }
-    });
-
     const heroInfo = await getImageAndNameIOrH(
       heroesInfoEndpoint,
       mostPopularHeroIdsWithoutStats[i],
-    );
-
-    await sleep(2_000);
-
-    const itemInfo = await getImageAndNameIOrH(
-      itemsInfoEndpoint,
-      mostPopularItemIdsWithoutStats[i],
     );
 
     mostPopularHeroes.push({
@@ -131,6 +122,29 @@ export async function openDotaApi(
         "%",
     });
 
+    await sleep(1_000);
+  }
+
+  logger.info("Found the avatars and names of all you heroes.");
+
+  for (let i: number = 0; i < TOTAL_TOP_ITEMS; i++) {
+    const coincidencesItem = sortByPopularityNumbers(allItemsIds).filter(
+      (itemId) => itemId === mostPopularItemIdsWithoutStats[i],
+    );
+
+    const winRateForItem = winMatches.filter((match) => {
+      for (const itemId of match.items_ids) {
+        if (itemId === mostPopularItemIdsWithoutStats[i]) {
+          return true;
+        }
+      }
+    });
+
+    const itemInfo = await getImageAndNameIOrH(
+      itemsInfoEndpoint,
+      mostPopularItemIdsWithoutStats[i],
+    );
+
     mostPopularItems.push({
       item: itemInfo.name,
       avatar: itemInfo.avatar,
@@ -140,12 +154,14 @@ export async function openDotaApi(
         ((winRateForItem.length / coincidencesItem.length) * 100).toFixed(2) +
         "%",
     });
+
+    await sleep(1_000);
   }
+
+  logger.info("Found the avatars and names of all you items.");
 
   finalSortToTables(mostPopularHeroes);
   finalSortToTables(mostPopularItems);
-
-  logger.info("A rating of items and heroes has been formed.");
 
   const playerStats: IPlayerStats = {
     totalGames: matches.length,
@@ -161,7 +177,8 @@ export async function openDotaApi(
     playerName,
     avatarUrl,
     playerStats,
-    TOTAL_TOP,
+    TOTAL_TOP_ITEMS,
+    TOTAL_TOP_HEROES,
     records,
   };
 }
