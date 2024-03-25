@@ -161,7 +161,7 @@ export async function parserDotaBuff(
 
   logger.info("Found all the heroes.");
 
-  const TOTAL_TOP: number = getTopCount(allGames.length);
+  const TOTAL_TOP: number = getTopCount();
 
   const mostPopularHeroesWithoutStats: IAllArray[] = sortByPopularityObjects(
     allHeroes,

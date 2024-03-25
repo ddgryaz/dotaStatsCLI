@@ -1,4 +1,5 @@
 {
   "players": [],
-  "port": 6781
+  "port": 6781,
+  "rows": 10
 }

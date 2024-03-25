@@ -50,7 +50,7 @@ export async function openDotaApi(
     `Data collected - ${matches.length} games. Running data aggregation.`,
   );
 
-  const TOTAL_TOP = getTopCount(matches.length);
+  const TOTAL_TOP = getTopCount();
 
   const winMatches = matches.filter((match) => match.result === "Won Match");
 
