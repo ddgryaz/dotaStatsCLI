@@ -1,8 +1,7 @@
-function ceil50(number: number): number {
-  return Math.ceil(number / 50) * 50;
-}
+import config from "../config.json";
+import { IConfig } from "../types/IConfig";
 
-export function getTopCount(gamesCount: number): number {
-  if (ceil50(gamesCount) >= 200) return 10;
-  return 5;
+export function getTopCount(): number {
+  const CONFIG: IConfig = config;
+  return CONFIG.rows || 10;
 }

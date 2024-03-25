@@ -31,12 +31,21 @@ general information.
 
 ### Table of Contents
 
+- [Advantages and differences](#advantages-and-differences)
 - [How it works?](#how-it-works)
 - [Quick start and install](#quick-start-and-install)
 - [Customization](#customization)
 - [FAQ](#FAQ)
 - [Changelog](#Changelog)
 - [License](#license)
+
+### Advantages and differences
+
+DotaStatsCLI allows you to see full statistics (including games in Turbo and other major game mods). 
+For example: You have played 500 games on Tinker, 450 of which were played in Turbo mode. 
+Other stats providers, as well as Dota itself, will claim that you only played Tinker in 50 games.  
+
+DotaStatsCLI in this example will show your 500 games on Tinker.
 
 ### How it works?
 
@@ -157,14 +166,14 @@ they look great in your game records section!
 
 * What determines the number of heroes or items in statistics tables?
 
-> The number of rows in statistics tables is a dynamic variable. 
-> If you requested 200+ game matches for analysis, 
-> then there will be 10 lines, otherwise 5.
+> The number of rows in statistics tables is configured in the configuration file (config.json). 
+> The default value is 10.
 
 * By what principle are the statistics tables sorted?
 
 > The data is sorted by the number of games played (column - "Total Games"), 
-> the second criterion for sorting is the percentage of wins (column - "WinRate %").
+> the second criterion for sorting is the percentage of wins (column - "WinRate %"), 
+> the third sorting criterion is alphabet.
 
 * For some items in the rating, instead of a name and image, “no data” is written. Is this a bug?  
 

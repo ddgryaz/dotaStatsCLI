@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.4.0] - 2024-03-25
+
+### Added
+
+- The number of rows in the Heroes and Items tables can be configured in the configuration file.
+- The third parameter is for sorting the final tables (alphabetically).
+
+### Changed
+
+- OPENDOTA/the process of obtaining names and images of items/heroes has been optimized. The speed of data acquisition has been increased by ~10 times.
+- Documentation (```README.md```) updated.
+
 ## [1.3.1] - 2024-01-20
 
 ### Fixed

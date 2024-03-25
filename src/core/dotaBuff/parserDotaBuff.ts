@@ -161,7 +161,7 @@ export async function parserDotaBuff(
 
   logger.info("Found all the heroes.");
 
-  const TOTAL_TOP: number = getTopCount(allGames.length);
+  const TOTAL_TOP: number = getTopCount();
 
   const mostPopularHeroesWithoutStats: IAllArray[] = sortByPopularityObjects(
     allHeroes,
@@ -220,7 +220,7 @@ export async function parserDotaBuff(
     );
 
     mostPopularHeroes.push({
-      hero: mostPopularHeroesWithoutStats[i].name,
+      name: mostPopularHeroesWithoutStats[i].name,
       avatar: mostPopularHeroesWithoutStats[i].avatar,
       totalGames: `${coincidencesHero.length}/${allGames.length}`,
       winRate: `${winRateForHero.length}/${coincidencesHero.length}`,
@@ -249,7 +249,7 @@ export async function parserDotaBuff(
     );
 
     mostPopularItems.push({
-      item: mostPopularItemsWithoutStats[i].name,
+      name: mostPopularItemsWithoutStats[i].name,
       avatar: mostPopularItemsWithoutStats[i].avatar,
       totalGames: `${coincidencesItem.length}/${allGames.length}`,
       winRate: `${winRateForItem.length}/${coincidencesItem.length}`,

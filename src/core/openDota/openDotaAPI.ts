@@ -3,9 +3,7 @@ import { getNameAndAvatar } from "./getNameAndAvatar";
 import { getMatches } from "./getMatches";
 import { getTopCount } from "../getTopCount";
 import { IMostPopular } from "../dotaBuff/types/IMostPopular";
-import { getImageAndNameIOrH } from "./getImageAndNameIOrH";
 import { IPlayerStats } from "../dotaBuff/types/IPlayerStats";
-import { sleep } from "../../utils/sleep";
 import { IProviderResult } from "../../types/IProviderResult";
 import { logger } from "../../utils/logger";
 import { IAllMatches } from "./types/IAllMatches";
@@ -14,12 +12,12 @@ import { finalSortToTables } from "../../utils/finalSortToTables";
 import { IRecords } from "../../types/IRecords";
 import { calcRecordsFromOpenDota } from "./calcRecordsFromOpenDota";
 import { ImpossibleGetDataError } from "../../errors/impossibleGetDataError";
+import { HeroesAndItems } from "./heroesAndItems";
+import { IHeroesAndItems } from "./types/IHeroesAndItems";
 
 const providerHost = "https://api.opendota.com";
 const playerEndpoint = `${providerHost}/api/players/REQUIRED_ID`;
 const matchesEndpoint = `${providerHost}/api/players/REQUIRED_ID/matches?significant=0&project=item_0&project=item_1&project=item_2&project=item_3&project=item_4&project=item_5&project=hero_id&project=kills&project=deaths&project=assists&project=duration&project=game_mode&limit=GAMES_COUNT`;
-const heroesInfoEndpoint = `${providerHost}/api/constants/heroes`;
-const itemsInfoEndpoint = `${providerHost}/api/constants/items`;
 
 export async function openDotaApi(
   id: number,
@@ -52,7 +50,7 @@ export async function openDotaApi(
     `Data collected - ${matches.length} games. Running data aggregation.`,
   );
 
-  const TOTAL_TOP = getTopCount(matches.length);
+  const TOTAL_TOP = getTopCount();
 
   const winMatches = matches.filter((match) => match.result === "Won Match");
 
@@ -91,9 +89,11 @@ export async function openDotaApi(
 
   logger.info("Matches won, popular heroes and items calculated.");
 
+  const heroesAndItems = await HeroesAndItems.getInstance();
+
   const records: IRecords = await calcRecordsFromOpenDota(
     matches,
-    heroesInfoEndpoint,
+    heroesAndItems,
   );
 
   logger.info(`Calculated your records for ${matches.length} games.`);
@@ -107,22 +107,19 @@ export async function openDotaApi(
       (match) => match.hero_id === mostPopularHeroIdsWithoutStats[i],
     );
 
-    const heroInfo = await getImageAndNameIOrH(
-      heroesInfoEndpoint,
-      mostPopularHeroIdsWithoutStats[i],
+    const heroInfo = heroesAndItems.heroes?.find(
+      (hero: IHeroesAndItems) => hero.id === mostPopularHeroIdsWithoutStats[i],
     );
 
     mostPopularHeroes.push({
-      hero: heroInfo.name,
-      avatar: heroInfo.avatar,
+      name: heroInfo?.name || "No data",
+      avatar: heroInfo?.avatar || "No data",
       totalGames: `${coincidencesHero.length}/${matches.length}`,
       winRate: `${winRateForHero.length}/${coincidencesHero.length}`,
       "winRate%":
         ((winRateForHero.length / coincidencesHero.length) * 100).toFixed(2) +
         "%",
     });
-
-    await sleep(1_000);
   }
 
   logger.info("Found the avatars and names of all you heroes.");
@@ -140,22 +137,19 @@ export async function openDotaApi(
       }
     });
 
-    const itemInfo = await getImageAndNameIOrH(
-      itemsInfoEndpoint,
-      mostPopularItemIdsWithoutStats[i],
+    const itemInfo = heroesAndItems.items?.find(
+      (item: IHeroesAndItems) => item.id === mostPopularItemIdsWithoutStats[i],
     );
 
     mostPopularItems.push({
-      item: itemInfo.name,
-      avatar: itemInfo.avatar,
+      name: itemInfo?.name || "No data",
+      avatar: itemInfo?.avatar || "No data",
       totalGames: `${coincidencesItem.length}/${matches.length}`,
       winRate: `${winRateForItem.length}/${coincidencesItem.length}`,
       "winRate%":
         ((winRateForItem.length / coincidencesItem.length) * 100).toFixed(2) +
         "%",
     });
-
-    await sleep(1_000);
   }
 
   logger.info("Found the avatars and names of all you items.");

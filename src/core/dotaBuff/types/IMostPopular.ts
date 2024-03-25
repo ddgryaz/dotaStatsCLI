@@ -1,7 +1,6 @@
 export interface IMostPopular {
-  hero?: string;
   avatar: string;
-  item?: string;
+  name: string;
   totalGames: string;
   winRate: string;
   "winRate%": string;
