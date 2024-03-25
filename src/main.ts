@@ -282,7 +282,7 @@ async function main(): Promise<void> {
             <th class="table-image">
               <img src="${hero.avatar}" alt="" />
             </th>
-            <th>${hero.hero}</th>
+            <th>${hero.name}</th>
             <th>${hero.totalGames}</th>
             <th>${hero.winRate}</th>
             <th>${hero["winRate%"]}</th>
@@ -297,7 +297,7 @@ async function main(): Promise<void> {
             <th class="table-image">
               <img src="${item.avatar}" alt="" />
             </th>
-            <th>${item.item}</th>
+            <th>${item.name}</th>
             <th>${item.totalGames}</th>
             <th>${item.winRate}</th>
             <th>${item["winRate%"]}</th>

@@ -112,7 +112,7 @@ export async function openDotaApi(
     );
 
     mostPopularHeroes.push({
-      hero: heroInfo?.name || "No data",
+      name: heroInfo?.name || "No data",
       avatar: heroInfo?.avatar || "No data",
       totalGames: `${coincidencesHero.length}/${matches.length}`,
       winRate: `${winRateForHero.length}/${coincidencesHero.length}`,
@@ -142,7 +142,7 @@ export async function openDotaApi(
     );
 
     mostPopularItems.push({
-      item: itemInfo?.name || "No data",
+      name: itemInfo?.name || "No data",
       avatar: itemInfo?.avatar || "No data",
       totalGames: `${coincidencesItem.length}/${matches.length}`,
       winRate: `${winRateForItem.length}/${coincidencesItem.length}`,
