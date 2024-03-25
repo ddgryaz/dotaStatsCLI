@@ -2,10 +2,9 @@ import { getRecords } from "../getRecords";
 import { IAllMatches } from "./types/IAllMatches";
 import { IRecords } from "../../types/IRecords";
 import { getTimeFromSeconds } from "../../utils/getTimeFromSeconds";
-import { getImageAndNameIOrH } from "./getImageAndNameIOrH";
-import { sleep } from "../../utils/sleep";
 import { gameModes } from "../../constants/gameModes";
 import { MIN_DURATION } from "../../constants/minDuration";
+import { HeroesAndItems } from "./heroesAndItems";
 
 const getMatchUrl = (matchId: number): string => {
   return "https://www.dotabuff.com/matches/".concat(matchId.toString());
@@ -13,7 +12,7 @@ const getMatchUrl = (matchId: number): string => {
 
 export async function calcRecordsFromOpenDota(
   arrayWithGames: IAllMatches[],
-  endpointForHeroName: string,
+  heroesAndItems: HeroesAndItems,
 ): Promise<IRecords> {
   const matchesWithRecords: { [key: string]: IAllMatches } = getRecords(
     arrayWithGames.filter((match) => {
@@ -25,14 +24,11 @@ export async function calcRecordsFromOpenDota(
   };
 
   for (const matchWithRecord of Object.values(matchesWithRecords)) {
-    const { name } = await getImageAndNameIOrH(
-      endpointForHeroName,
-      matchWithRecord.hero_id,
+    const hero = heroesAndItems.heroes?.find(
+      (hero) => hero.id === matchWithRecord.hero_id,
     );
 
-    matchWithRecord.hero_name = name;
-
-    await sleep(2_000);
+    matchWithRecord.hero_name = hero?.name || "No data";
   }
 
   return {
