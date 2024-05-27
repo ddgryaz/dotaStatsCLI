@@ -9,6 +9,15 @@ export class Validator {
     }
   }
 
+  static inputPlayerIdValidator(input: string): boolean | string {
+    const isOnlyDigits: boolean = /^\d+$/.test(input);
+    if (!isOnlyDigits || input.length <= 0) {
+      return "Only numbers. Required field";
+    } else {
+      return true;
+    }
+  }
+
   static inputMatchCountValidator(input: string): boolean | string {
     if (/^\d+$/.test(input) && Number(input) > 0) {
       return true;
