@@ -1,13 +1,13 @@
 {
   "compilerOptions": {
-    "module": "commonjs",
+    "module": "node16",
     "declaration": false,
     "removeComments": true,
     "emitDecoratorMetadata": false,
     "experimentalDecorators": false,
     "allowSyntheticDefaultImports": true,
-    "target": "ES2021",
-    "moduleResolution": "node",
+    "target": "ES2022",
+    "moduleResolution": "node16",
     "sourceMap": false,
     "outDir": "./dist",
     "baseUrl": ".",
@@ -25,5 +25,5 @@
     "noFallthroughCasesInSwitch": false,
     "resolveJsonModule": true
   },
-  "include": ["src/**/*"]
+  "include": ["src/**/*", "src/**/*.json"]
 }

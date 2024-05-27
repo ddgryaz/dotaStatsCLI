@@ -1,5 +1,5 @@
-import { BaseError } from "./baseError";
-import { IProviderResult } from "../types/IProviderResult";
+import { BaseError } from "./baseError.js";
+import { IProviderResult } from "../types/IProviderResult.js";
 
 export class SaveDataError extends BaseError {
   readonly data: IProviderResult;

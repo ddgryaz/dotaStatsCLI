@@ -1,9 +1,10 @@
-import Pino from "pino";
-import Pretty from "pino-pretty";
-
-export const logger = Pino(
-  Pretty({
-    colorize: true,
-    translateTime: "SYS:standard",
-  }),
-);
+import { pino } from "pino";
+export const logger = pino({
+  transport: {
+    target: "pino-pretty",
+    options: {
+      colorize: true,
+      translateTime: "SYS:standard",
+    },
+  },
+});

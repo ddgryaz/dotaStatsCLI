@@ -1,6 +1,6 @@
-import { IPlayerReqResponse } from "./types/IPlayerReqResponse";
-import { BaseError } from "../../errors/baseError";
-import { ImpossibleGetDataError } from "../../errors/impossibleGetDataError";
+import { IPlayerReqResponse } from "./types/IPlayerReqResponse.js";
+import { BaseError } from "../../errors/baseError.js";
+import { ImpossibleGetDataError } from "../../errors/impossibleGetDataError.js";
 
 export async function getNameAndAvatar(
   id: number,

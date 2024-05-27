@@ -1,10 +1,10 @@
-import { getRecords } from "../getRecords";
-import { IAllMatches } from "./types/IAllMatches";
-import { IRecords } from "../../types/IRecords";
-import { getTimeFromSeconds } from "../../utils/getTimeFromSeconds";
-import { gameModes } from "../../constants/gameModes";
-import { MIN_DURATION } from "../../constants/minDuration";
-import { HeroesAndItems } from "./heroesAndItems";
+import { getRecords } from "../getRecords.js";
+import { IAllMatches } from "./types/IAllMatches.js";
+import { IRecords } from "../../types/IRecords.js";
+import { getTimeFromSeconds } from "../../utils/getTimeFromSeconds.js";
+import { gameModes } from "../../constants/gameModes.js";
+import { MIN_DURATION } from "../../constants/minDuration.js";
+import { HeroesAndItems } from "./heroesAndItems.js";
 
 const getMatchUrl = (matchId: number): string => {
   return "https://www.dotabuff.com/matches/".concat(matchId.toString());

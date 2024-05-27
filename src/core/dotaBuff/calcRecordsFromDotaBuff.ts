@@ -1,9 +1,9 @@
-import { IAllGames } from "./types/IAllGames";
-import { IRecords } from "../../types/IRecords";
-import { getRecords } from "../getRecords";
-import { getTimeFromSeconds } from "../../utils/getTimeFromSeconds";
-import { gameModes } from "../../constants/gameModes";
-import { MIN_DURATION } from "../../constants/minDuration";
+import { IAllGames } from "./types/IAllGames.js";
+import { IRecords } from "../../types/IRecords.js";
+import { getRecords } from "../getRecords.js";
+import { getTimeFromSeconds } from "../../utils/getTimeFromSeconds.js";
+import { gameModes } from "../../constants/gameModes.js";
+import { MIN_DURATION } from "../../constants/minDuration.js";
 
 export function calcRecordsFromDotaBuff(arrayWithGames: IAllGames[]): IRecords {
   const {

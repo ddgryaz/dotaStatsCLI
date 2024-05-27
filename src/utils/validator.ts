@@ -1,4 +1,4 @@
-import { BaseError } from "../errors/baseError";
+import { BaseError } from "../errors/baseError.js";
 
 export class Validator {
   static inputPlayerNameValidator(input: string): boolean | string {

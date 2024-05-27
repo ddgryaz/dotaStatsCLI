@@ -1,5 +1,5 @@
 import isOnline from "is-online";
-import { NoNetworkError } from "../errors/noNetworkError";
+import { NoNetworkError } from "../errors/noNetworkError.js";
 
 export async function checkNetworkConnection(): Promise<void> {
   const isConnection: boolean = await isOnline();

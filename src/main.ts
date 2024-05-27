@@ -2,31 +2,34 @@
 
 import fastify from "fastify";
 import open from "open";
-import { parserDotaBuff } from "./core/dotaBuff/parserDotaBuff";
+import { parserDotaBuff } from "./core/dotaBuff/parserDotaBuff.js";
 import * as process from "process";
-import { readFile } from "fs/promises";
+import { readFile } from "node:fs/promises";
 import { writeFileSync } from "fs";
-import * as path from "path";
-import { IProviderResult } from "./types/IProviderResult";
-import { SaveDataError } from "./errors/saveDataError";
-import { logger } from "./utils/logger";
-import { openDotaApi } from "./core/openDota/openDotaAPI";
+import { IProviderResult } from "./types/IProviderResult.js";
+import { SaveDataError } from "./errors/saveDataError.js";
+import { logger } from "./utils/logger.js";
+import { openDotaApi } from "./core/openDota/openDotaAPI.js";
 import inquirer from "inquirer";
-import { APPLICATION_NAME } from "./constants/applicationName";
-import { ROUTER_NAME } from "./constants/routerName";
+import { APPLICATION_NAME } from "./constants/applicationName.js";
+import { ROUTER_NAME } from "./constants/routerName.js";
 import { fastifyStatic } from "@fastify/static";
-import { sleep } from "./utils/sleep";
-import { TIME_TO_CLOSE_APP } from "./constants/timeToCloseApp";
-import { getDateTime } from "./utils/getDateTime";
-import { IRecord } from "./types/IRecords";
-import { checkNetworkConnection } from "./utils/checkNetworkConnection";
-import { INTRODUCTION_TEXT } from "./constants/introductionText";
-import config from "./config.json";
-import { IConfig } from "./types/IConfig";
-import { PATH_TO_CONFIG } from "./constants/pathToConfig";
-import { Validator } from "./utils/validator";
-import { APP_VERSION } from "./constants/version"; // generated at build time.
-import { checkForUpdates } from "./utils/checkForUpdates";
+import { sleep } from "./utils/sleep.js";
+import { TIME_TO_CLOSE_APP } from "./constants/timeToCloseApp.js";
+import { getDateTime } from "./utils/getDateTime.js";
+import { IRecord } from "./types/IRecords.js";
+import { checkNetworkConnection } from "./utils/checkNetworkConnection.js";
+import { INTRODUCTION_TEXT } from "./constants/introductionText.js";
+import { IConfig } from "./types/IConfig.js";
+import { PATH_TO_CONFIG } from "./constants/pathToConfig.js";
+import { Validator } from "./utils/validator.js";
+import { checkForUpdates } from "./utils/checkForUpdates.js";
+import { fileURLToPath } from "node:url";
+import path from "node:path";
+import { APP_VERSION } from "./constants/version.js"; // generated at build time.
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const config = JSON.parse(await readFile(PATH_TO_CONFIG, { encoding: "utf8" }));
 
 const http = fastify();
 let [id, totalGames]: string[] = [process.argv[2], process.argv[3]];

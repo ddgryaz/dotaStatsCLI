@@ -1,4 +1,4 @@
-import { IMostPopular } from "./IMostPopular";
+import { IMostPopular } from "./IMostPopular.js";
 
 export interface IPlayerStats {
   totalGames: number;

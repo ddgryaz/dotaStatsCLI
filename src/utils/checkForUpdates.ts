@@ -1,5 +1,5 @@
-import { ICheckForUpdates } from "../types/ICheckForUpdates";
-import { logger } from "./logger";
+import { ICheckForUpdates } from "../types/ICheckForUpdates.js";
+import { logger } from "./logger.js";
 
 const NPM_API_ENDPOINT: string =
   "https://registry.npmjs.org/dotastatscli/latest";
