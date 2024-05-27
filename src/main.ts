@@ -20,21 +20,20 @@ import { getDateTime } from "./utils/getDateTime.js";
 import { IRecord } from "./types/IRecords.js";
 import { checkNetworkConnection } from "./utils/checkNetworkConnection.js";
 import { INTRODUCTION_TEXT } from "./constants/introductionText.js";
-import { IConfig } from "./types/IConfig.js";
 import { PATH_TO_CONFIG } from "./constants/pathToConfig.js";
 import { Validator } from "./utils/validator.js";
 import { checkForUpdates } from "./utils/checkForUpdates.js";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
 import { APP_VERSION } from "./constants/version.js"; // generated at build time.
+import { Config } from "./core/config.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const config = JSON.parse(await readFile(PATH_TO_CONFIG, { encoding: "utf8" }));
 
 const http = fastify();
 let [id, totalGames]: string[] = [process.argv[2], process.argv[3]];
 const HOST: string = "127.0.0.1";
-const CONFIG: IConfig = config;
+const CONFIG = Config.getInstance().config;
 const PORT: number = CONFIG.port || 6781;
 
 const providers = [
