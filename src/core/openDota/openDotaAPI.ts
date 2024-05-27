@@ -54,9 +54,13 @@ export async function openDotaApi(
 
   const winMatches = matches.filter((match) => match.result === "Won Match");
 
-  const allHeroesIds = matches.map((match) => {
-    return match.hero_id;
-  });
+  const allHeroesIds = matches
+    .map((match) => {
+      return match.hero_id;
+    })
+    .filter((hero) => {
+      if (hero !== 0) return hero;
+    });
 
   const allItemsIds = matches
     .map((match) => {
@@ -140,6 +144,8 @@ export async function openDotaApi(
     const itemInfo = heroesAndItems.items?.find(
       (item: IHeroesAndItems) => item.id === mostPopularItemIdsWithoutStats[i],
     );
+
+    if (!itemInfo) continue;
 
     mostPopularItems.push({
       name: itemInfo?.name || "No data",
