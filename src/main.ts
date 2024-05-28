@@ -40,6 +40,7 @@ const CONFIG = Config.getInstance().config;
 const PORT: number = CONFIG.port || 6781;
 
 let id: string, totalGames: string;
+let start: number;
 
 const providers = [
   {
@@ -139,6 +140,8 @@ async function main(): Promise<void> {
     ]));
 
     logger.info("Start of data collection...");
+
+    start = performance.now();
 
     data = await service(Number(id), Number(totalGames));
     error = null;
@@ -395,6 +398,11 @@ async function main(): Promise<void> {
       reply.code(200).type("text/html; charset=utf-8").send(modifiedValidHtml);
     }
 
+    const end: number = performance.now();
+    logger.info(
+      `Program running time: ${((end - start) / 1000).toFixed(2)} seconds.`,
+    );
+
     logger.info(
       `Application will exit in ${
         TIME_TO_CLOSE_APP / 1000
@@ -409,10 +417,6 @@ async function main(): Promise<void> {
   await open(`http://localhost:${PORT}${FULL_ROUTER_NAME}`);
 }
 
-const start = performance.now();
 main().then(() => {
-  const end = performance.now();
-  logger.info(
-    `Program running time: ${((end - start) / 1000).toFixed(2)} seconds.`,
-  );
+  logger.info(`Finished!`);
 });
