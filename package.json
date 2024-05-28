@@ -1,6 +1,6 @@
 {
   "name": "dotastatscli",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "author": "Dmitriy Dzyuman <t.me/dimadzuman>",
   "license": "MIT",
   "description": "Simple, free and effective CLI application that allows you to receive statistics of your matches in dota and visualize it in a pleasant and understandable way.",

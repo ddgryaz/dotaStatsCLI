@@ -39,7 +39,7 @@ export function collectAllGames(document: Document): IAllGames[] {
         heroAvatar:
           "https://www.dotabuff.com".concat(
             gameRow
-              .querySelector("div[class*='image-container-hero'] img")
+              .querySelector("td.cell-icon a img")
               ?.getAttribute("src") || "",
           ) || "",
         hero:

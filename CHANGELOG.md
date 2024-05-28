@@ -1,5 +1,11 @@
 # Changelog
 
+## [2.0.1] - 2024-05-29
+
+### Fixed
+
+- DOTABUFF/changed image selectors (consequences of the new patch in the game).
+
 ## [2.0.0] - 2024-05-28
 
 ### Changed
