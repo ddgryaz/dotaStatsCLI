@@ -1,4 +1,4 @@
-import { IMostPopular } from "../core/dotaBuff/types/IMostPopular";
+import { IMostPopular } from "../core/dotaBuff/types/IMostPopular.js";
 
 export function finalSortToTables(array: IMostPopular[]): IMostPopular[] {
   return array.sort((a: IMostPopular, b: IMostPopular) => {

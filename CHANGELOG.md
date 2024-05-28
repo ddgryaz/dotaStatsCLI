@@ -1,5 +1,22 @@
 # Changelog
 
+## [2.0.0] - 2024-05-28
+
+### Changed
+
+- The application has switched to ESM.
+- Arguments are no longer needed. User interaction via CLI.
+- Dependencies have been updated.
+- Optimized interaction with the configuration file.
+- Documentation (```README.md```) updated.
+
+### Fixed
+
+- Fixed a bug due to which the application could not open chrome on modern Linux distributions.
+- OPENDOTA/games in which a hero is not selected are not counted.
+- OPENDOTA/bug with displaying "no data" in the items table.
+- The program timer has been fixed. The time is counted from the moment the user selected the provider.
+
 ## [1.4.0] - 2024-03-25
 
 ### Added

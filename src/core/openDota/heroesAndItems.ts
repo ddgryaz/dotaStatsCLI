@@ -1,6 +1,6 @@
-import { IHeroesAndItems } from "./types/IHeroesAndItems";
-import { IDataWithStaticInfo } from "./types/IDataWithStaticInfo";
-import { BaseError } from "../../errors/baseError";
+import { IHeroesAndItems } from "./types/IHeroesAndItems.js";
+import { IDataWithStaticInfo } from "./types/IDataWithStaticInfo.js";
+import { BaseError } from "../../errors/baseError.js";
 
 export class HeroesAndItems {
   /*

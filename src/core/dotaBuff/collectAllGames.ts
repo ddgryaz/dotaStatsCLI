@@ -1,5 +1,5 @@
-import { IAllGames } from "./types/IAllGames";
-import { IAllArray } from "./types/IAllArray";
+import { IAllGames } from "./types/IAllGames.js";
+import { IAllArray } from "./types/IAllArray.js";
 
 function calcDuration(durationRaw: string): number {
   const timeElements = durationRaw.split(":");

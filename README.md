@@ -29,6 +29,9 @@ You choose how many matches you want to receive information for.
 We visualize this information and provide your gaming records, top rankings and
 general information.
 
+> Starting with version 2.0.0 dotaStatsCLI switched to ESM.
+> And also received changes in user interaction. README updated.
+
 ### Table of Contents
 
 - [Advantages and differences](#advantages-and-differences)
@@ -49,21 +52,21 @@ DotaStatsCLI in this example will show your 500 games on Tinker.
 
 ### How it works?
 
-The application takes two arguments. The first is the player ID, the second is 
-the number of games that need to be analyzed.  
+After launching the application, you will be given a choice.  
+Find a player and collect statistics on him or select a player from previously saved ones.
+(If there are no saved players, the corresponding item will be disabled).  
 
-Next, the application will ask you to select a game data provider.
-There are two data providers available in version 1.0.0.  
+Next, you will need to enter the number of matches you want to analyze and select a game data provider.  
+
+Choose an openDota provider (recommended) if you want to get statistics for a large number of
+games or for your entire gaming career (50-10000+ matches).  
 
 Choose dotaBuff provider if you want to get fast visualization for a small number of 
 games (50-500 matches).  
 
-Choose an openDota provider if you want to get statistics for a large number of 
-games or for your entire gaming career (50-10000+ matches).  
-
-In the first case, a web scraper will be launched, 
-which will collect information by interacting with html markup.
-In the second case, the data will be collected from the provider using query API calls.  
+In the first case, the data will be collected from the provider using query API calls.
+In the second case, a web scraper will be launched,
+which will collect information by interacting with html markup.  
 
 After collecting the data and all the necessary calculations, 
 an HTML page will be generated, which will open in your default browser.
@@ -84,20 +87,13 @@ If you already have an older version installed, run:
 npm update -g dotastatscli
 ```
 
-Use the app with two required arguments, PLAYER_ID and GAMES_COUNT, like this:
-
-```sh
-dotastatscli 321580662 500
-```
-
-This ID belongs to a professional Dota player. 
-After all the calculations have been made, the visualization will open in your browser.  
-
-Also, the first time you analyze a player, you will be asked to save it to a configuration file. 
+The first time you analyze a player, you will be asked to save it to a configuration file. 
 You can save players for quick access to their statistics.  
 
-For convenience, you can save players in a configuration file.
-You can use ```dotastatscli``` without arguments if you pre-populate the configuration file (```config.json```).   
+Saved players are stored in a configuration file. 
+Its location is displayed on the screen every time the program is launched. 
+Some other settings are also stored here, such as the port for the application 
+or the number of rows in the statistics tables.  
 
 An example of a correctly completed ```config.json```:
 
@@ -121,18 +117,10 @@ An example of a correctly completed ```config.json```:
       "id": 431770905
     }
   ],
-  "port": 6781
+  "port": 6781,
+  "rows": 10
 }
 ```
-
-Next, simply run the application without any arguments:
-
-```sh
-dotastatscli
-```
-
-The application will prompt you to select a player and enter 
-the required number of matches for analysis.
 
 
 ### Customization
@@ -142,9 +130,7 @@ distributed and used without additional licensing.
 
 But you can customize the images on the home page and error page.
 Simply replace the images in the `templates/images`
-directory while maintaining the standard file name. We highly recommend taking
-a look at the images from here - [Dota 2 Wallpapers](https://www.wallpaperflare.com/search?wallpaper=dota+2), 
-they look great in your game records section!
+directory while maintaining the standard file name.
 
 ### FAQ
 

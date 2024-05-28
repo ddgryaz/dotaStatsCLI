@@ -1,4 +1,4 @@
-import { BaseError } from "../errors/baseError";
+import { BaseError } from "../errors/baseError.js";
 
 export class Validator {
   static inputPlayerNameValidator(input: string): boolean | string {
@@ -6,6 +6,15 @@ export class Validator {
       return true;
     } else {
       return "Only Latin letters or numbers. No more than 20 characters.";
+    }
+  }
+
+  static inputPlayerIdValidator(input: string): boolean | string {
+    const isOnlyDigits: boolean = /^\d+$/.test(input);
+    if (!isOnlyDigits || input.length <= 0) {
+      return "Only numbers. Required field";
+    } else {
+      return true;
     }
   }
 

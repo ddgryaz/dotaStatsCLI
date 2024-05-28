@@ -1,3 +1,3 @@
-import { BaseError } from "./baseError";
+import { BaseError } from "./baseError.js";
 
 export class BanError extends BaseError {}

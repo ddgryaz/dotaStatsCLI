@@ -1,4 +1,4 @@
-import { IAllArray } from "./types/IAllArray";
+import { IAllArray } from "./types/IAllArray.js";
 
 export function sortByPopularityObjects(array: IAllArray[]): IAllArray[] {
   const countHeroMatches = Object.create(null);

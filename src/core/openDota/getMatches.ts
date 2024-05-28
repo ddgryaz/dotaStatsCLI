@@ -1,6 +1,6 @@
-import { IMatchesReqResponse } from "./types/IMatchesReqResponse";
-import { BaseError } from "../../errors/baseError";
-import { IAllMatches } from "./types/IAllMatches";
+import { IMatchesReqResponse } from "./types/IMatchesReqResponse.js";
+import { BaseError } from "../../errors/baseError.js";
+import { IAllMatches } from "./types/IAllMatches.js";
 
 export async function getMatches(
   id: number,

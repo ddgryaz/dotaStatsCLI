@@ -2,37 +2,45 @@
 
 import fastify from "fastify";
 import open from "open";
-import { parserDotaBuff } from "./core/dotaBuff/parserDotaBuff";
+import { parserDotaBuff } from "./core/dotaBuff/parserDotaBuff.js";
 import * as process from "process";
-import { readFile } from "fs/promises";
+import { readFile } from "node:fs/promises";
 import { writeFileSync } from "fs";
-import * as path from "path";
-import { IProviderResult } from "./types/IProviderResult";
-import { SaveDataError } from "./errors/saveDataError";
-import { logger } from "./utils/logger";
-import { openDotaApi } from "./core/openDota/openDotaAPI";
+import { IProviderResult } from "./types/IProviderResult.js";
+import { SaveDataError } from "./errors/saveDataError.js";
+import { logger } from "./utils/logger.js";
+import { openDotaApi } from "./core/openDota/openDotaAPI.js";
 import inquirer from "inquirer";
-import { APPLICATION_NAME } from "./constants/applicationName";
-import { ROUTER_NAME } from "./constants/routerName";
+import { APPLICATION_NAME } from "./constants/applicationName.js";
+import { ROUTER_NAME } from "./constants/routerName.js";
 import { fastifyStatic } from "@fastify/static";
-import { sleep } from "./utils/sleep";
-import { TIME_TO_CLOSE_APP } from "./constants/timeToCloseApp";
-import { getDateTime } from "./utils/getDateTime";
-import { IRecord } from "./types/IRecords";
-import { checkNetworkConnection } from "./utils/checkNetworkConnection";
-import { INTRODUCTION_TEXT } from "./constants/introductionText";
-import config from "./config.json";
-import { IConfig } from "./types/IConfig";
-import { PATH_TO_CONFIG } from "./constants/pathToConfig";
-import { Validator } from "./utils/validator";
-import { APP_VERSION } from "./constants/version"; // generated at build time.
-import { checkForUpdates } from "./utils/checkForUpdates";
+import { sleep } from "./utils/sleep.js";
+import { TIME_TO_CLOSE_APP } from "./constants/timeToCloseApp.js";
+import { getDateTime } from "./utils/getDateTime.js";
+import { IRecord } from "./types/IRecords.js";
+import { checkNetworkConnection } from "./utils/checkNetworkConnection.js";
+import { INTRODUCTION_TEXT } from "./constants/introductionText.js";
+import { PATH_TO_CONFIG } from "./constants/pathToConfig.js";
+import { Validator } from "./utils/validator.js";
+import { checkForUpdates } from "./utils/checkForUpdates.js";
+import { fileURLToPath } from "node:url";
+import path from "node:path";
+import { APP_VERSION } from "./constants/version.js"; // generated at build time.
+import { Config } from "./core/config.js";
+import { mainAction } from "./core/CLI/mainAction.js";
+import { savedPlayers } from "./core/CLI/savedPlayers.js";
+import { newPlayer } from "./core/CLI/newPlayer.js";
+import { IMainAction } from "./core/CLI/types/IMainAction.js";
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const http = fastify();
-let [id, totalGames]: string[] = [process.argv[2], process.argv[3]];
 const HOST: string = "127.0.0.1";
-const CONFIG: IConfig = config;
+const CONFIG = Config.getInstance().config;
 const PORT: number = CONFIG.port || 6781;
+
+let id: string, totalGames: string;
+let start: number;
 
 const providers = [
   {
@@ -66,31 +74,61 @@ async function main(): Promise<void> {
       console.log(`v.${APP_VERSION}. ${updateNotification}\n`);
     }
 
-    if (!id && !totalGames && CONFIG && CONFIG.players?.length) {
-      const { playerId, matchesCount } = await inquirer.prompt([
-        {
-          type: "list",
-          name: "playerId",
-          message:
-            "Configuration file detected! Select a player from the list:",
-          choices: CONFIG.players.map((player) => {
-            return { name: player.playerName, value: player.id };
-          }),
-        },
-        {
-          type: "input",
-          name: "matchesCount",
-          message: "Enter number of matches:",
-          default: 200,
-          validate: Validator.inputMatchCountValidator,
-        },
-      ]);
+    const action: IMainAction = await mainAction();
 
-      id = playerId;
-      totalGames = matchesCount;
+    switch (action.name) {
+      case "New player":
+        const dataFromNewPlayer = await newPlayer();
+        id = dataFromNewPlayer.playerId;
+        totalGames = dataFromNewPlayer.matchesCount;
+
+        Validator.checkArgs(id, totalGames);
+
+        const searchPlayer = CONFIG.players?.find(
+          (player) => player.id === Number(id),
+        );
+
+        if (!searchPlayer) {
+          const { answerForSavePlayer } = await inquirer.prompt([
+            {
+              type: "confirm",
+              name: "answerForSavePlayer",
+              message: `Save player (${id}) in config file?:`,
+              default: true,
+            },
+          ]);
+
+          if (answerForSavePlayer) {
+            const { playerNameForSave } = await inquirer.prompt([
+              {
+                type: "input",
+                name: "playerNameForSave",
+                message: "Enter player name:",
+                validate: Validator.inputPlayerNameValidator,
+              },
+            ]);
+
+            CONFIG.players?.push({
+              playerName: playerNameForSave,
+              id: Number(id),
+            });
+
+            writeFileSync(
+              path.join(__dirname, "config.json"),
+              JSON.stringify(CONFIG),
+            );
+          }
+        }
+
+        break;
+      case "Saved players":
+        const dataFromSavedPlayers = await savedPlayers();
+        id = dataFromSavedPlayers.playerId;
+        totalGames = dataFromSavedPlayers.matchesCount;
+
+        Validator.checkArgs(id, totalGames);
+        break;
     }
-
-    Validator.checkArgs(id, totalGames);
 
     ({ service } = await inquirer.prompt([
       {
@@ -101,48 +139,9 @@ async function main(): Promise<void> {
       },
     ]));
 
-    const searchPlayer = CONFIG.players?.find(
-      (player) => player.id === Number(id),
-    );
-
-    if (!searchPlayer) {
-      const { answerForSavePlayer } = await inquirer.prompt([
-        {
-          type: "list",
-          name: "answerForSavePlayer",
-          message: `Save player (${id}) in config file?:`,
-          choices: [
-            { name: "Yes", value: true },
-            { name: "No", value: false },
-          ],
-        },
-      ]);
-
-      if (answerForSavePlayer) {
-        const { playerNameForSave } = await inquirer.prompt([
-          {
-            type: "input",
-            name: "playerNameForSave",
-            message: "Enter player name:",
-            validate: Validator.inputPlayerNameValidator,
-          },
-        ]);
-
-        CONFIG.players?.push({
-          playerName: playerNameForSave,
-          id: Number(id),
-        });
-
-        writeFileSync(
-          path.join(__dirname, "config.json"),
-          JSON.stringify(CONFIG),
-        );
-      }
-    } else {
-      logger.info(`The player is already known - ${searchPlayer.playerName}`);
-    }
-
     logger.info("Start of data collection...");
+
+    start = performance.now();
 
     data = await service(Number(id), Number(totalGames));
     error = null;
@@ -399,6 +398,11 @@ async function main(): Promise<void> {
       reply.code(200).type("text/html; charset=utf-8").send(modifiedValidHtml);
     }
 
+    const end: number = performance.now();
+    logger.info(
+      `Program running time: ${((end - start) / 1000).toFixed(2)} seconds.`,
+    );
+
     logger.info(
       `Application will exit in ${
         TIME_TO_CLOSE_APP / 1000
@@ -413,10 +417,6 @@ async function main(): Promise<void> {
   await open(`http://localhost:${PORT}${FULL_ROUTER_NAME}`);
 }
 
-const start = performance.now();
 main().then(() => {
-  const end = performance.now();
-  logger.info(
-    `Program running time: ${((end - start) / 1000).toFixed(2)} seconds.`,
-  );
+  logger.info(`Finished!`);
 });

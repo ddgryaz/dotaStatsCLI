@@ -1,4 +1,4 @@
-import { IAllArray } from "./IAllArray";
+import { IAllArray } from "./IAllArray.js";
 
 export interface IAllGames {
   hero: string;

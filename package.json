@@ -1,11 +1,11 @@
 {
   "name": "dotastatscli",
-  "version": "1.4.0",
+  "version": "2.0.0",
   "author": "Dmitriy Dzyuman <t.me/dimadzuman>",
   "license": "MIT",
   "description": "Simple, free and effective CLI application that allows you to receive statistics of your matches in dota and visualize it in a pleasant and understandable way.",
   "main": "dist/main.js",
-  "type": "commonjs",
+  "type": "module",
   "scripts": {
     "build": "tsc",
     "start": "node dist/main.js",
@@ -54,11 +54,11 @@
   "dependencies": {
     "@fastify/static": "^6.12.0",
     "fastify": "^4.24.3",
-    "inquirer": "^8.2.6",
+    "inquirer": "^9.2.22",
     "is-online": "^9.0.1",
     "jsdom": "^23.0.1",
-    "open": "^8.4.1",
-    "pino": "^8.17.1",
-    "pino-pretty": "^10.3.0"
+    "open": "^10.1.0",
+    "pino": "^9.1.0",
+    "pino-pretty": "^11.1.0"
   }
 }

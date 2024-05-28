@@ -1,19 +1,19 @@
-import { BaseError } from "../../errors/baseError";
-import { getNameAndAvatar } from "./getNameAndAvatar";
-import { getMatches } from "./getMatches";
-import { getTopCount } from "../getTopCount";
-import { IMostPopular } from "../dotaBuff/types/IMostPopular";
-import { IPlayerStats } from "../dotaBuff/types/IPlayerStats";
-import { IProviderResult } from "../../types/IProviderResult";
-import { logger } from "../../utils/logger";
-import { IAllMatches } from "./types/IAllMatches";
-import { sortByPopularityNumbers } from "./sortByPopularityNumbers";
-import { finalSortToTables } from "../../utils/finalSortToTables";
-import { IRecords } from "../../types/IRecords";
-import { calcRecordsFromOpenDota } from "./calcRecordsFromOpenDota";
-import { ImpossibleGetDataError } from "../../errors/impossibleGetDataError";
-import { HeroesAndItems } from "./heroesAndItems";
-import { IHeroesAndItems } from "./types/IHeroesAndItems";
+import { BaseError } from "../../errors/baseError.js";
+import { getNameAndAvatar } from "./getNameAndAvatar.js";
+import { getMatches } from "./getMatches.js";
+import { getTopCount } from "../getTopCount.js";
+import { IMostPopular } from "../dotaBuff/types/IMostPopular.js";
+import { IPlayerStats } from "../dotaBuff/types/IPlayerStats.js";
+import { IProviderResult } from "../../types/IProviderResult.js";
+import { logger } from "../../utils/logger.js";
+import { IAllMatches } from "./types/IAllMatches.js";
+import { sortByPopularityNumbers } from "./sortByPopularityNumbers.js";
+import { finalSortToTables } from "../../utils/finalSortToTables.js";
+import { IRecords } from "../../types/IRecords.js";
+import { calcRecordsFromOpenDota } from "./calcRecordsFromOpenDota.js";
+import { ImpossibleGetDataError } from "../../errors/impossibleGetDataError.js";
+import { HeroesAndItems } from "./heroesAndItems.js";
+import { IHeroesAndItems } from "./types/IHeroesAndItems.js";
 
 const providerHost = "https://api.opendota.com";
 const playerEndpoint = `${providerHost}/api/players/REQUIRED_ID`;
@@ -54,9 +54,13 @@ export async function openDotaApi(
 
   const winMatches = matches.filter((match) => match.result === "Won Match");
 
-  const allHeroesIds = matches.map((match) => {
-    return match.hero_id;
-  });
+  const allHeroesIds = matches
+    .map((match) => {
+      return match.hero_id;
+    })
+    .filter((hero) => {
+      if (hero !== 0) return hero;
+    });
 
   const allItemsIds = matches
     .map((match) => {
@@ -140,6 +144,8 @@ export async function openDotaApi(
     const itemInfo = heroesAndItems.items?.find(
       (item: IHeroesAndItems) => item.id === mostPopularItemIdsWithoutStats[i],
     );
+
+    if (!itemInfo) continue;
 
     mostPopularItems.push({
       name: itemInfo?.name || "No data",

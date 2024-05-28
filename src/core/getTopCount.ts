@@ -1,7 +1,6 @@
-import config from "../config.json";
-import { IConfig } from "../types/IConfig";
+import { Config } from "./config.js";
 
 export function getTopCount(): number {
-  const CONFIG: IConfig = config;
+  const CONFIG = Config.getInstance().config;
   return CONFIG.rows || 10;
 }

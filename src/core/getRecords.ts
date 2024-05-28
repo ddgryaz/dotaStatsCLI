@@ -1,5 +1,5 @@
-import { IAllGames } from "./dotaBuff/types/IAllGames";
-import { IAllMatches } from "./openDota/types/IAllMatches";
+import { IAllGames } from "./dotaBuff/types/IAllGames.js";
+import { IAllMatches } from "./openDota/types/IAllMatches.js";
 
 export function getRecords(arrayWithGames: IAllGames[] | IAllMatches[]) {
   const gameWithRecordKills = arrayWithGames.reduce((acc, curr) =>
